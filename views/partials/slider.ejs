@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Responsive Packages Slider — HK Grotesk</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --accent-navy: #0b1a1a;
+      --muted: #6b6f72;
+      --card-bg: #ffffff;
+      --primary-btn: #0b1a2b;
+      --accent-border: rgba(47,88,69,0.12);
+    }
+
+    body{
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      margin: 0;
+      color: var(--accent-navy);
+      background: #fff;
+    }
+
+    .section-wrapper{
+      padding: 72px 40px 90px;
+      text-align: center;
+    }
+
+    .slider-title{
+      font-weight: 700;
+      font-size: 42px;
+      line-height: 1.05;
+      margin-bottom: 12px;
+      color: var(--accent-navy);
+    }
+
+    .hero-sub{
+      max-width: 980px;
+      margin: 0 auto 28px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* Multi-item responsive carousel (custom) */
+    .multi-carousel {
+      position: relative;
+      margin-top: 22px;
+    }
+
+    .carousel-viewport {
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 22px;
+      will-change: transform;
+      align-items: stretch;
+    }
+
+    .pkg-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      min-width: 100%;
+      box-shadow: 0 22px 36px rgba(17,28,42,0.06);
+      border: 1px solid rgba(20,40,70,0.03);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* card inner sizes adjust based on visible cards (JS sets sizes too) */
+    .pkg-image {
+      position: relative;
+      height: 190px;
+      background: #f3f6fb;
+      overflow: hidden;
+    }
+    .pkg-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+      transition: transform 0.35s ease;
+    }
+
+    /* Hover zoom effect */
+    .pkg-card:hover .pkg-image img { transform: scale(1.08); }
+
+    .wishlist {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color: #0b1a1a;
+      background: rgba(255,255,255,0.88);
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+    }
+
+    .pkg-body {
+      padding: 18px;
+      text-align: left;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      flex: 1 1 auto;
+    }
+
+    .pkg-title {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--accent-navy);
+      line-height: 1.15;
+    }
+
+    .pkg-meta {
+      font-size: 13px;
+      color: var(--muted);
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .pkg-stars {
+      color: #f5b642;
+      font-size: 14px;
+    }
+
+    .pkg-footer {
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .price {
+      font-weight: 700;
+      font-size: 17px;
+    }
+
+    .btn-explore {
+      background: var(--primary-btn);
+      color: #fff;
+      padding: 9px 16px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+    }
+
+    .explore-more {
+      margin-top: 30px;
+      display:inline-block;
+      padding: 10px 24px;
+      border-radius: 8px;
+      border: 1.6px solid #cfe3d6;
+      color: #20332b;
+      background: transparent;
+      font-weight: 600;
+    }
+
+    /* spacing for cards when multiple visible */
+    .card-wrapper { flex: 0 0 auto; width: 100%; }
+
+    /* responsiveness: we'll control visible count with JS; some size hints for small screens */
+    @media (max-width: 1199px){
+      .hero-title{ font-size:38px; }
+      .pkg-image{ height:180px; }
+    }
+    @media (max-width: 991px){
+      .hero-title{ font-size:34px; }
+      .pkg-image{ height:170px; }
+    }
+    @media (max-width: 575px){
+      .section-wrapper{ padding: 36px 18px 50px; }
+      .hero-title{ font-size:26px; }
+      .pkg-image{ height:150px; }
+      .wishlist{ font-size:13px; padding:6px 8px; }
+    }
+
+    /* small subtle fade effect under carousel to mimic original soft shadow */
+    .carousel-bottom-fade {
+      height: 40px;
+      margin-top: -6px;
+      background: linear-gradient(180deg, rgba(255,255,255,0), rgba(243,246,251,0.8));
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="section-wrapper">
+    <div class="container">
+      <h2 class="slider-title">Unleash Your Spirit Of Adventure In The Untamed North</h2>
+      <p class="hero-sub">From the rugged peaks of the Karakoram to the serene valleys dotted with wildflowers, The Magpie Treks & Tours is your gateway to Pakistan's breathtaking northern landscapes. Dive into unforgettable experiences, crafted for the true adventurer.</p>
+
+      <% if (typeof tourPackages !== 'undefined' && tourPackages.length > 0) { %>
+      <!-- responsive multi-item carousel -->
+      <div class="multi-carousel" id="multiCarousel" data-interval="4000">
+        <div class="carousel-viewport">
+          <div class="carousel-track">
+
+              <!-- Dynamic tour packages from database -->
+              <% tourPackages.forEach(function(package) { 
+                   // Resolve image URL strictly from Package Image (package.imageUrl)
+                   const base = (adminBaseUrl || '').replace(/\/$/, '');
+                   const raw = (package.imageUrl || '').trim();
+                   let resolvedImg = '/images/hero-img1.webp';
+                   if (raw) {
+                     if (raw.startsWith('data:')) {
+                       resolvedImg = raw;
+                     } else if (raw.startsWith('http')) {
+                       // If points to localhost/127.0.0.1[:port], swap origin with admin base
+                       resolvedImg = raw.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, base);
+                     } else if (raw.startsWith('/')) {
+                       // Relative-from-root path coming from admin uploads (e.g. /uploads/abc.jpg)
+                       resolvedImg = base + raw;
+                     } else {
+                       // Bare relative path (e.g. uploads/abc.jpg)
+                       resolvedImg = base + '/' + raw;
+                     }
+                   }
+              %>
+            <div class="card-wrapper">
+              <article class="pkg-card">
+                <div class="pkg-image">
+                      <img 
+                        src="<%= resolvedImg %>" 
+                        alt="<%= package.title %>"
+                        data-title="<%= package.title %>"
+                        data-raw="<%= package.imageUrl || '' %>"
+                        data-admin-base="<%= adminBaseUrl %>"
+                        onload="console.log('[slider] image loaded:', this.dataset.title, this.src)"
+                        onerror="(function(img){
+                          try {
+                            const raw = (img.dataset.raw || '').trim();
+                            const base = (img.dataset.adminBase || '').replace(/\/$/, '');
+                            const attempts = [];
+                            // 1) If current src already equals base+raw and failed, try raw as-is (in case it's public on same origin)
+                            if (raw) {
+                              if (img.src.startsWith(base) && (raw.startsWith('/') || !raw.startsWith('http'))) {
+                                attempts.push(raw);
+                              }
+                              // 2) If raw is http to localhost, swap to base
+                              if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(raw)) {
+                                attempts.push(raw.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, base));
+                              }
+                              // 3) Ensure base + '/' + raw format
+                              if (!raw.startsWith('http')) {
+                                attempts.push(base + (raw.startsWith('/') ? '' : '/') + raw);
+                              }
+                            }
+                            // 4) Final fallback to hero image
+                            attempts.push('/images/hero-img1.webp');
+
+                            console.warn('[slider] image failed:', img.dataset.title, { src: img.src, raw, base, attempts });
+                            // sequentially try unique attempts
+                            const tried = new Set();
+                            (function tryNext(){
+                              const next = attempts.shift();
+                              if (!next) return;
+                              if (tried.has(next)) return tryNext();
+                              tried.add(next);
+                              fetch(next, { method: 'HEAD' })
+                                .then(r => {
+                                  console.log('[slider] HEAD', r.status, next);
+                                  if (r.ok) {
+                                    img.onerror = null;
+                                    img.src = next;
+                                  } else {
+                                    tryNext();
+                                  }
+                                })
+                                .catch(() => tryNext());
+                            })();
+                          } catch(e) {
+                            console.warn('[slider] onerror handler exception:', e.message);
+                            img.onerror = null;
+                            img.src = '/images/hero-img1.webp';
+                          }
+                        })(this)"
+                      >
+                  <div class="wishlist"><i class="bi bi-heart"></i><span>Add to wishlist</span></div>
+                </div>
+                <div class="pkg-body">
+                  <div>
+                        <h3 class="pkg-title"><%= package.title %></h3>
+                        <div class="pkg-meta">
+                          <i class="bi bi-geo-alt"></i> 
+                          <%= package.location || 'Pakistan\'s northern regions' %>
+                  </div>
+                        <div class="pkg-stars">
+                          <% for (let i = 1; i <= 5; i++) { %>
+                            <% if (i <= package.stars) { %>
+                              <i class="bi bi-star-fill"></i>
+                            <% } else { %>
+                              <i class="bi bi-star"></i>
+                            <% } %>
+                          <% } %>
+                  </div>
+                  </div>
+
+                  <div class="pkg-footer">
+                        <div class="price">$<%= package.price.toLocaleString() %></div>
+                    <button class="btn-explore" onclick="window.location.href='/payment/<%= package._id %>'">Explore</button>
+                  </div>
+                </div>
+              </article>
+            </div>
+              <% }); %>
+
+          </div> <!-- /.carousel-track -->
+        </div> <!-- /.carousel-viewport -->
+
+        <div class="carousel-bottom-fade" aria-hidden="true"></div>
+      </div> <!-- /.multi-carousel -->
+
+      <div class="text-center">
+        <button class="explore-more">Explore More</button>
+      </div>
+      <% } else { %>
+        <!-- No Data Placeholder -->
+        <div class="no-data-placeholder" style="text-align: center; padding: 60px 20px; margin: 40px 0;">
+          <div style="background: #f8f9fa; border-radius: 12px; padding: 40px; border: 2px dashed #dee2e6;">
+            <i class="bi bi-inbox" style="font-size: 48px; color: #6c757d; margin-bottom: 20px;"></i>
+            <h3 style="color: var(--accent-navy); font-weight: 600; margin-bottom: 12px;">No Tour Packages Available</h3>
+            <p style="color: var(--muted); margin-bottom: 0; font-size: 15px;">
+              We're currently updating our adventure packages. Please check back soon for exciting new tours and experiences!
+            </p>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Bootstrap JS bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script id="sliderDebugData" type="application/json"><%- JSON.stringify({
+    base: adminBaseUrl,
+    items: (typeof tourPackages !== 'undefined' && tourPackages.length > 0) ? tourPackages.map(function(t){ return { title: t.title || '', raw: (t.imageUrl || '').trim() }; }) : []
+  }) %></script>
+
+  <script>
+    // Slider debug: log raw and resolved URLs for quick inspection
+    (function(){
+      try {
+        var dataEl = document.getElementById('sliderDebugData');
+        var sliderData = dataEl ? JSON.parse(dataEl.textContent || '{}') : { base: '', items: [] };
+        const debug = (sliderData.items || []).map(function(it){
+          var resolved = '/images/hero-img1.webp';
+          var raw = it.raw;
+          var base = sliderData.base.replace(/\/$/, '');
+          if (raw) {
+            if (raw.startsWith('http')) {
+              resolved = raw.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, base);
+            } else if (raw.startsWith('/')) {
+              resolved = base + raw;
+            } else {
+              resolved = base + '/' + raw;
+            }
+          }
+          return { title: it.title, raw: it.raw, resolved: resolved, base: sliderData.base };
+        });
+        if (debug.length) {
+          console.group('[slider] image debug table');
+          console.table(debug);
+          console.groupEnd();
+        }
+      } catch(e) { console.warn('[slider] debug table failed:', e && e.message); }
+    })();
+
+    /* Responsive multi-item auto carousel
+       - visible counts:
+         >=1200px -> 4
+         >=992px  -> 3
+         >=768px  -> 2
+         <768px   -> 1
+       - Uses clones for infinite loop
+       - Interval taken from data-interval attribute (ms)
+    */
+    (function(){
+      const carousel = document.getElementById('multiCarousel');
+      const track = carousel.querySelector('.carousel-track');
+      let interval = parseInt(carousel.dataset.interval) || 4000;
+      let timer = null;
+
+      // breakpoints -> visible count
+      function getVisibleCount(){
+        const w = window.innerWidth;
+        if (w >= 1200) return 4;
+        if (w >= 992) return 3;
+        if (w >= 768) return 2;
+        return 1;
+      }
+
+      // Build carousel: clone nodes and set widths
+      function build(){
+        // clear any existing timer and clones
+        clearInterval(timer);
+        // remove previous clones if any
+        track.style.transition = 'none';
+        // move children to array
+        const originals = Array.from(track.querySelectorAll('.card-wrapper')).filter(n => !n.classList.contains('clone'));
+        // remove all nodes in track
+        track.innerHTML = '';
+        // determine visible
+        const visible = getVisibleCount();
+
+        // create clones of last 'visible' to front, and first 'visible' to end
+        const total = originals.length;
+        const prefix = originals.slice(Math.max(0, total - visible)).map(n => n.cloneNode(true));
+        const suffix = originals.slice(0, visible).map(n => n.cloneNode(true));
+
+        prefix.forEach(n => n.classList.add('clone'));
+        suffix.forEach(n => n.classList.add('clone'));
+
+        // append in order: prefix, originals, suffix
+        prefix.forEach(n => track.appendChild(n));
+        originals.forEach(n => track.appendChild(n));
+        suffix.forEach(n => track.appendChild(n));
+
+        // set item widths (each .card-wrapper => (100 / visible)% of viewport minus gap)
+        const gap = 22; // px, same as CSS gap
+        // We will compute pixel widths because transform uses px.
+        // viewport width:
+        const viewportWidth = carousel.querySelector('.carousel-viewport').clientWidth;
+        // compute available width minus gaps between items
+        const visibleCount = visible;
+        // total gaps between visible items = (visibleCount - 1) * gap
+        const itemWidth = (viewportWidth - (gap * (visibleCount - 1))) / visibleCount;
+
+        // apply widths to all items (including clones)
+        Array.from(track.children).forEach(child => {
+          child.style.width = itemWidth + 'px';
+        });
+
+        // set track transform starting position: move to the first original (prefix length)
+        const startIndex = prefix.length;
+        // compute initial translateX
+        const translateX = -startIndex * (itemWidth + gap);
+        track.style.transform = `translateX(${translateX}px)`;
+        // small delay before enabling transitions
+        setTimeout(() => { track.style.transition = 'transform 550ms cubic-bezier(.22,.9,.32,1)'; }, 40);
+
+        // attach transitionend handler for loop reset
+        track._itemWidth = itemWidth + gap;
+        track._visible = visible;
+        track._startIndex = startIndex;
+        track._totalItems = track.children.length;
+        track._currentIndex = startIndex;
+      }
+
+      function nextSlide(){
+        // move one item forward
+        const step = track._itemWidth;
+        track._currentIndex++;
+        track.style.transform = `translateX(${-track._currentIndex * step}px)`;
+        // after transition, check if we need to reset
+      }
+
+      // handle infinite reset
+      function handleTransitionEnd(){
+        const total = track._totalItems;
+        const visible = track._visible;
+        const startIndex = track._startIndex;
+        // When we've reached suffix clones at end:
+        if (track._currentIndex >= total - visible){
+          // jump back to startIndex (originals) without animation
+          track.style.transition = 'none';
+          track._currentIndex = startIndex;
+          track.style.transform = `translateX(${-track._currentIndex * track._itemWidth}px)`;
+          // re-enable transition next tick
+          setTimeout(()=> { track.style.transition = 'transform 550ms cubic-bezier(.22,.9,.32,1)'; }, 40);
+        }
+      }
+
+      // Start autoplay
+      function startAuto(){
+        clearInterval(timer);
+        timer = setInterval(() => {
+          nextSlide();
+        }, interval);
+      }
+
+      // stop autoplay
+      function stopAuto(){
+        clearInterval(timer);
+        timer = null;
+      }
+
+      // init
+      build();
+      startAuto();
+
+      // events
+      window.addEventListener('resize', () => {
+        // rebuild on resize (debounce)
+        if (this._resizeTimeout) clearTimeout(this._resizeTimeout);
+        this._resizeTimeout = setTimeout(() => {
+          build();
+          startAuto();
+        }, 120);
+      });
+
+      // transitionend
+      track.addEventListener('transitionend', handleTransitionEnd);
+
+      // pause on hover for usability on desktop
+      carousel.addEventListener('mouseenter', stopAuto);
+      carousel.addEventListener('mouseleave', startAuto);
+
+      // expose a small API in case you want to programmatically change interval
+      carousel.$rebuild = () => { build(); startAuto(); };
+    })();
+  </script>
+</body>
+</html>

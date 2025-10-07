@@ -1,0 +1,1053 @@
+<style>
+  /* Cart Popup Styles */
+  .cart-popup {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 350px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 1000;
+    margin-top: 10px;
+  }
+  
+  .cart-popup-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .cart-popup-body {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 0;
+  }
+  
+  .cart-popup-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    background: #f8f9fa;
+  }
+  
+  .cart-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .cart-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .cart-item:last-child {
+    border-bottom: none;
+  }
+  
+  .cart-item-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .cart-item-price {
+    color: #28a745;
+    font-weight: 600;
+  }
+  
+  .cart-item-location {
+    color: #6c757d;
+    font-size: 0.9rem;
+  }
+  
+  .empty-cart {
+    color: #6c757d;
+  }
+  
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    min-width: 300px;
+    max-width: 400px;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .notification.show {
+    transform: translateX(0);
+  }
+  
+  .notification.success {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+  }
+  
+  .notification-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  
+  .notification-close:hover {
+    opacity: 1;
+  }
+  
+  /* Notification Popup Styles */
+  .notification-popup {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 350px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 1000;
+    margin-top: 10px;
+  }
+  
+  .notification-popup-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .notification-popup-body {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 0;
+  }
+  
+  .notification-popup-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    background: #f8f9fa;
+  }
+  
+  .notification-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .notification-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .notification-item:last-child {
+    border-bottom: none;
+  }
+  
+  .notification-item.unread {
+    background-color: #f0f8ff;
+    border-left: 3px solid #007bff;
+  }
+  
+  .notification-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .notification-message {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+  
+  .notification-time {
+    color: #999;
+    font-size: 0.8rem;
+  }
+  
+  .empty-notifications {
+    color: #6c757d;
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+  <div class=" ps-5 pe-5 container-fluid">
+    <a class="navbar-brand d-flex align-items-center" href="/">
+      <img src="/images/logo.jpeg" alt="Mountain Trek Tours" style="height: 100px; width: auto;">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto" style="gap: 5px;">
+        <li class="nav-item"><a class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'home') ? 'active' : '' %>" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'about') ? 'active' : '' %>" href="/about">About Us</a></li>
+        <li class="nav-item"><a class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'hiking') ? 'active' : '' %>" href="/hiking">Activity</a></li>
+        <li class="nav-item"><a class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'gallery') ? 'active' : '' %>" href="/gallery">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'contact') ? 'active' : '' %>" href="/contact">Contact</a></li>
+        <li class="nav-item"><a class="nav-link <%= (typeof currentPage !== 'undefined' && currentPage === 'faq') ? 'active' : '' %>" href="/faq">FAQ's</a></li>
+      </ul>
+
+      <div class="dropdown me-5 border rounded">
+        <button id="langDropdownToggle" class="btn dropdown-toggle mt-2 mb-2 me-2" type="button" data-bs-toggle="dropdown">
+          English
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" data-lang="">Select Language</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="en">🇺🇸 English</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="fr">🇫🇷 French</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="de">🇩🇪 German</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="it">🇮🇹 Italian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="es">🇪🇸 Spanish</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="pt">🇵🇹 Portuguese</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="ru">🇷🇺 Russian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="zh-CN">🇨🇳 Chinese (Simplified)</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="zh-TW">🇹🇼 Chinese (Traditional)</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="ja">🇯🇵 Japanese</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="ko">🇰🇷 Korean</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="ar">🇸🇦 Arabic</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="hi">🇮🇳 Hindi</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="th">🇹🇭 Thai</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="vi">🇻🇳 Vietnamese</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="tr">🇹🇷 Turkish</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="pl">🇵🇱 Polish</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="nl">🇳🇱 Dutch</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="sv">🇸🇪 Swedish</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="no">🇳🇴 Norwegian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="da">🇩🇰 Danish</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="fi">🇫🇮 Finnish</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="cs">🇨🇿 Czech</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="hu">🇭🇺 Hungarian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="ro">🇷🇴 Romanian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="bg">🇧🇬 Bulgarian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="hr">🇭🇷 Croatian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="sk">🇸🇰 Slovak</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="sl">🇸🇮 Slovenian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="et">🇪🇪 Estonian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="lv">🇱🇻 Latvian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="lt">🇱🇹 Lithuanian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="uk">🇺🇦 Ukrainian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="be">🇧🇾 Belarusian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="ms">🇲🇾 Malay</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="id">🇮🇩 Indonesian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="tl">🇵🇭 Filipino</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="he">🇮🇱 Hebrew</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="fa">🇮🇷 Persian</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="ur">🇵🇰 Urdu</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="bn">🇧🇩 Bengali</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="ta">🇮🇳 Tamil</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="te">🇮🇳 Telugu</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="ml">🇮🇳 Malayalam</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="kn">🇮🇳 Kannada</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="gu">🇮🇳 Gujarati</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="pa">🇮🇳 Punjabi</a></li>
+          <li><a class="dropdown-item lang-option" href="#" data-lang="mr">🇮🇳 Marathi</a></li>
+        </ul>
+      </div>
+
+      <!-- Notification Icon -->
+      <div class="me-3 position-relative">
+        <button class="btn btn-outline-secondary position-relative" type="button" id="notificationButton" onclick="toggleNotificationPopup()">
+          <i class="bi bi-bell"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notificationCount" style="font-size: 0.7rem;">
+            0
+          </span>
+        </button>
+        
+        <!-- Notification Popup -->
+        <div class="notification-popup" id="notificationPopup" style="display: none;">
+          <div class="notification-popup-header">
+            <h6 class="mb-0">Notifications</h6>
+            <button type="button" class="btn-close" onclick="closeNotificationPopup()"></button>
+          </div>
+          <div class="notification-popup-body" id="notificationItems">
+            <div class="empty-notifications text-center py-4">
+              <i class="bi bi-bell-slash text-muted" style="font-size: 2rem;"></i>
+              <p class="text-muted mt-2 mb-0">No notifications yet</p>
+            </div>
+          </div>
+          <div class="notification-popup-footer" id="notificationFooter" style="display: none;">
+            <button class="btn btn-primary btn-sm w-100" onclick="markAllAsRead()">Mark All as Read</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cart Icon -->
+      <div class="me-3 position-relative">
+        <button class="btn btn-outline-secondary position-relative" type="button" id="cartButton" onclick="toggleCartPopup()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.5 5.1 16.5H17M17 13V17C17 18.1 16.1 19 15 19H9C7.9 19 7 18.1 7 17V13M17 13H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount" style="font-size: 0.7rem;">
+            0
+          </span>
+        </button>
+        
+        <!-- Cart Popup -->
+        <div class="cart-popup" id="cartPopup" style="display: none;">
+          <div class="cart-popup-header">
+            <h6 class="mb-0">Shopping Cart</h6>
+            <button type="button" class="btn-close" onclick="closeCartPopup()"></button>
+          </div>
+          <div class="cart-popup-body" id="cartItems">
+            <div class="empty-cart text-center py-4">
+              <i class="bi bi-cart-x text-muted" style="font-size: 2rem;"></i>
+              <p class="text-muted mt-2 mb-0">Your cart is empty</p>
+            </div>
+          </div>
+          <div class="cart-popup-footer" id="cartFooter" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <strong>Total: $<span id="cartTotal">0</span></strong>
+            </div>
+            <button class="btn btn-primary w-100" onclick="proceedToCheckout()">Proceed to Checkout</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Authentication Section -->
+      <% if (typeof isAuthenticated !== 'undefined' && isAuthenticated) { %>
+        <!-- User is logged in -->
+        <div class="d-flex align-items-center">
+          <div class="dropdown me-3">
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle me-2"></i>
+              <%= user.fullName || user.username %>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/profile"><i class="bi bi-person me-2"></i>Profile</a></li>
+              <li><a class="dropdown-item" href="/bookings"><i class="bi bi-calendar-check me-2"></i>My Bookings</a></li>
+              <li><a class="dropdown-item" href="#" onclick="showPaymentHistory()"><i class="bi bi-credit-card me-2"></i>Payment History</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="btn dropdown-item" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      <% } else { %>
+        <!-- User is not logged in -->
+        <div class="d-flex align-items-center">
+          <a href="/login" class="btn btn-outline-primary">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Login
+          </a>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</nav>
+
+<!-- Payment History Modal -->
+<div class="modal fade" id="paymentHistoryModal" tabindex="-1" aria-labelledby="paymentHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paymentHistoryModalLabel">
+          <i class="bi bi-credit-card me-2"></i>Payment History
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="paymentHistoryContent">
+          <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading payment history...</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Enhanced dropdown initialization with debugging
+  (function initDropdowns() {
+    function boot() {
+      console.log('🔧 Initializing dropdowns...');
+      console.log('Bootstrap available:', !!window.bootstrap);
+      console.log('Bootstrap Dropdown available:', !!(window.bootstrap && window.bootstrap.Dropdown));
+      
+      try {
+        var toggles = Array.prototype.slice.call(document.querySelectorAll('[data-bs-toggle="dropdown"]'));
+        console.log('Found dropdown toggles:', toggles.length);
+        
+        // Bootstrap initialization - force reinitialize all dropdowns
+        if (window.bootstrap && window.bootstrap.Dropdown) {
+          console.log('✅ Using Bootstrap dropdowns');
+          toggles.forEach(function (el, index) {
+            // Always reinitialize to ensure it works on all pages
+            console.log(`Initializing Bootstrap dropdown ${index + 1}:`, el);
+            try {
+              // Dispose existing instance if any
+              if (el._dropdownInstance) {
+                el._dropdownInstance.dispose();
+              }
+              // Create new instance
+              el._dropdownInstance = new bootstrap.Dropdown(el);
+              el._dropdownInit = true;
+              console.log(`✅ Bootstrap dropdown ${index + 1} initialized successfully`);
+            } catch (error) {
+              console.error(`❌ Error initializing Bootstrap dropdown ${index + 1}:`, error);
+            }
+          });
+        } else {
+          console.log('⚠️ Bootstrap not available, using manual fallback');
+        }
+
+        // Manual fallback for all toggles
+        toggles.forEach(function (toggle, index) {
+          if (toggle._manualDropdownInit) return;
+          
+          var dropdown = toggle.closest('.dropdown');
+          var menu = dropdown ? dropdown.querySelector('.dropdown-menu') : null;
+          
+          console.log(`Setting up manual dropdown ${index + 1}:`, {
+            toggle: toggle,
+            dropdown: dropdown,
+            menu: menu
+          });
+          
+          // Ensure dropdown container has proper classes and positioning
+          if (dropdown) {
+            dropdown.classList.add('dropdown');
+            dropdown.style.position = 'relative';
+            console.log('Dropdown container classes:', dropdown.className);
+          }
+          
+          if (!menu) {
+            console.warn('No dropdown menu found for toggle:', toggle);
+            return;
+          }
+
+          function closeMenu() {
+            console.log('Closing dropdown menu');
+            menu.classList.remove('show');
+            menu.style.display = 'none';
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+
+          function openMenu() {
+            console.log('Opening dropdown menu');
+            menu.classList.add('show');
+            toggle.setAttribute('aria-expanded', 'true');
+            
+            // Ensure proper positioning
+            menu.style.display = 'block';
+            menu.style.position = 'absolute';
+            menu.style.top = '100%';
+            menu.style.left = '0';
+            menu.style.zIndex = '2000';
+            
+            console.log('Menu opened, classes:', menu.className);
+            console.log('Menu style display:', menu.style.display);
+            console.log('Menu computed display:', window.getComputedStyle(menu).display);
+          }
+
+          toggle.addEventListener('click', function (e) {
+            console.log('Dropdown toggle clicked:', {
+              toggle: toggle,
+              bootstrapAvailable: !!(window.bootstrap && toggle._dropdownInit),
+              menuVisible: menu.classList.contains('show')
+            });
+            
+            // Always use manual toggle as fallback, even if Bootstrap is available
+            // This ensures dropdowns work on all pages
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Small delay to let Bootstrap try first, then manual fallback
+            setTimeout(function() {
+              if (menu.classList.contains('show')) {
+                closeMenu();
+              } else {
+                openMenu();
+              }
+            }, 10);
+          });
+
+          // Close on outside click
+          document.addEventListener('click', function (e) {
+            if (!dropdown || dropdown.contains(e.target)) return; 
+            if (menu.classList.contains('show')) {
+              console.log('Closing dropdown due to outside click');
+              closeMenu();
+            }
+          });
+
+          // Close on Escape key
+          document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && menu.classList.contains('show')) {
+              console.log('Closing dropdown due to Escape key');
+              closeMenu();
+            }
+          });
+
+          toggle._manualDropdownInit = true;
+        });
+        
+        console.log('✅ Dropdown initialization complete');
+      } catch (e) { 
+        console.error('❌ Error initializing dropdowns:', e);
+      }
+    }
+    
+    // Run after DOM ready and again after window load
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('📄 DOM Content Loaded - initializing dropdowns');
+      boot();
+    });
+    
+    window.addEventListener('load', function() {
+      console.log('🔄 Window Loaded - re-initializing dropdowns');
+      boot();
+    });
+    
+    // Also run immediately if DOM is already ready
+    if (document.readyState === 'loading') {
+      console.log('⏳ DOM still loading, waiting...');
+    } else {
+      console.log('⚡ DOM already ready, initializing immediately');
+      boot();
+    }
+    
+    // Additional fallback - run after a short delay to ensure all scripts are loaded
+    setTimeout(function() {
+      console.log('🔄 Delayed initialization (2s)');
+      boot();
+    }, 2000);
+  })();
+
+  // Cart System JavaScript
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  
+  // Notification System JavaScript
+  let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+  
+  // Initialize cart and notifications on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    updateCartDisplay();
+    updateNotificationDisplay();
+    
+    // Start polling for payment status updates if user is authenticated
+    <% if (typeof isAuthenticated !== 'undefined' && isAuthenticated) { %>
+    startPaymentStatusPolling();
+    <% } %>
+  });
+  
+  // Add item to cart
+  function addToCart() {
+    // Get current page data
+    const tourData = getCurrentTourData();
+    if (!tourData) {
+      showNotification('Error: Unable to get tour information', 'error');
+      return;
+    }
+    
+    // Check if item already exists in cart
+    const existingItem = cart.find(item => item.id === tourData.id);
+    if (existingItem) {
+      showNotification('Item already in cart!', 'warning');
+      return;
+    }
+    
+    // Add to cart
+    cart.push(tourData);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+    showNotification('Added to cart successfully!', 'success');
+  }
+  
+  // Get current tour data (this will be overridden in payment page)
+  function getCurrentTourData() {
+    // Default implementation - will be overridden in payment page
+    return {
+      id: 'default-tour',
+      title: 'Sample Tour',
+      location: 'Sample Location',
+      price: 100,
+      imageUrl: '/images/hero-img1.webp'
+    };
+  }
+  
+  // Update cart display
+  function updateCartDisplay() {
+    const cartCount = document.getElementById('cartCount');
+    const cartItems = document.getElementById('cartItems');
+    const cartFooter = document.getElementById('cartFooter');
+    const cartTotal = document.getElementById('cartTotal');
+    
+    if (cartCount) {
+      cartCount.textContent = cart.length;
+    }
+    
+    if (cartItems) {
+      if (cart.length === 0) {
+        cartItems.innerHTML = `
+          <div class="empty-cart text-center py-4">
+            <i class="bi bi-cart-x text-muted" style="font-size: 2rem;"></i>
+            <p class="text-muted mt-2 mb-0">Your cart is empty</p>
+          </div>
+        `;
+        cartFooter.style.display = 'none';
+      } else {
+        cartItems.innerHTML = cart.map(item => `
+          <div class="cart-item" onclick="goToTour('${item.id}')">
+            <div class="cart-item-title">${item.title}</div>
+            <div class="cart-item-location">${item.location}</div>
+            <div class="cart-item-price">$${item.price}</div>
+          </div>
+        `).join('');
+        cartFooter.style.display = 'block';
+        
+        // Calculate total
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        if (cartTotal) {
+          cartTotal.textContent = total;
+        }
+      }
+    }
+  }
+  
+  // Toggle cart popup
+  function toggleCartPopup() {
+    const cartPopup = document.getElementById('cartPopup');
+    if (cartPopup) {
+      cartPopup.style.display = cartPopup.style.display === 'none' ? 'block' : 'none';
+    }
+  }
+  
+  // Close cart popup
+  function closeCartPopup() {
+    const cartPopup = document.getElementById('cartPopup');
+    if (cartPopup) {
+      cartPopup.style.display = 'none';
+    }
+  }
+  
+  // Go to tour page
+  function goToTour(tourId) {
+    // This will be overridden in payment page
+    window.location.href = `/payment/${tourId}`;
+  }
+  
+  // Proceed to checkout
+  function proceedToCheckout() {
+    if (cart.length === 0) {
+      showNotification('Your cart is empty!', 'warning');
+      return;
+    }
+    // Redirect to checkout page or show checkout modal
+    showNotification('Proceeding to checkout...', 'info');
+  }
+  
+  // Show notification
+  function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    // Create new notification
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+      <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+      <span>${message}</span>
+      <button class="notification-close" onclick="this.parentElement.remove()">&times;</button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Show notification
+    setTimeout(() => notification.classList.add('show'), 100);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => notification.remove(), 300);
+    }, 3000);
+  }
+  
+  // Close cart popup when clicking outside
+  document.addEventListener('click', function(e) {
+    const cartButton = document.getElementById('cartButton');
+    const cartPopup = document.getElementById('cartPopup');
+    const notificationButton = document.getElementById('notificationButton');
+    const notificationPopup = document.getElementById('notificationPopup');
+    
+    if (cartButton && cartPopup && 
+        !cartButton.contains(e.target) && 
+        !cartPopup.contains(e.target)) {
+      cartPopup.style.display = 'none';
+    }
+    
+    if (notificationButton && notificationPopup && 
+        !notificationButton.contains(e.target) && 
+        !notificationPopup.contains(e.target)) {
+      notificationPopup.style.display = 'none';
+    }
+  });
+  
+  // Notification System Functions
+  function addNotification(title, message, type = 'info') {
+    const notification = {
+      id: Date.now(),
+      title: title,
+      message: message,
+      type: type,
+      read: false,
+      timestamp: new Date().toISOString()
+    };
+    
+    notifications.unshift(notification);
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+    updateNotificationDisplay();
+    
+    // Show toast notification
+    showNotification(title, type);
+  }
+  
+  function updateNotificationDisplay() {
+    const notificationCount = document.getElementById('notificationCount');
+    const notificationItems = document.getElementById('notificationItems');
+    const notificationFooter = document.getElementById('notificationFooter');
+    
+    if (notificationCount) {
+      const unreadCount = notifications.filter(n => !n.read).length;
+      notificationCount.textContent = unreadCount;
+      notificationCount.style.display = unreadCount > 0 ? 'block' : 'none';
+    }
+    
+    if (notificationItems) {
+      if (notifications.length === 0) {
+        notificationItems.innerHTML = `
+          <div class="empty-notifications text-center py-4">
+            <i class="bi bi-bell-slash text-muted" style="font-size: 2rem;"></i>
+            <p class="text-muted mt-2 mb-0">No notifications yet</p>
+          </div>
+        `;
+        notificationFooter.style.display = 'none';
+      } else {
+        notificationItems.innerHTML = notifications.map(notification => `
+          <div class="notification-item ${!notification.read ? 'unread' : ''}" onclick="markAsRead('${notification.id}')">
+            <div class="notification-title">${notification.title}</div>
+            <div class="notification-message">${notification.message}</div>
+            <div class="notification-time">${new Date(notification.timestamp).toLocaleString()}</div>
+          </div>
+        `).join('');
+        
+        const hasUnread = notifications.some(n => !n.read);
+        notificationFooter.style.display = hasUnread ? 'block' : 'none';
+      }
+    }
+  }
+  
+  function toggleNotificationPopup() {
+    const notificationPopup = document.getElementById('notificationPopup');
+    if (notificationPopup) {
+      notificationPopup.style.display = notificationPopup.style.display === 'none' ? 'block' : 'none';
+    }
+  }
+  
+  function closeNotificationPopup() {
+    const notificationPopup = document.getElementById('notificationPopup');
+    if (notificationPopup) {
+      notificationPopup.style.display = 'none';
+    }
+  }
+  
+  function markAsRead(notificationId) {
+    const notification = notifications.find(n => n.id == notificationId);
+    if (notification) {
+      notification.read = true;
+      localStorage.setItem('notifications', JSON.stringify(notifications));
+      updateNotificationDisplay();
+    }
+  }
+  
+  function markAllAsRead() {
+    notifications.forEach(notification => {
+      notification.read = true;
+    });
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+    updateNotificationDisplay();
+    closeNotificationPopup();
+  }
+  
+  // Payment History Functions
+  async function showPaymentHistory() {
+    try {
+      // Show modal
+      const modal = new bootstrap.Modal(document.getElementById('paymentHistoryModal'));
+      modal.show();
+      
+      // Fetch payment requests
+      const response = await fetch('/api/payment-requests');
+      if (!response.ok) {
+        throw new Error('Failed to fetch payment history');
+      }
+      
+      const paymentRequests = await response.json();
+      displayPaymentHistory(paymentRequests);
+      
+    } catch (error) {
+      console.error('Error loading payment history:', error);
+      document.getElementById('paymentHistoryContent').innerHTML = `
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Failed to load payment history. Please try again.
+        </div>
+      `;
+    }
+  }
+  
+  function displayPaymentHistory(paymentRequests) {
+    const content = document.getElementById('paymentHistoryContent');
+    
+    if (!paymentRequests || paymentRequests.length === 0) {
+      content.innerHTML = `
+        <div class="text-center py-4">
+          <i class="bi bi-credit-card text-muted" style="font-size: 3rem;"></i>
+          <h5 class="mt-3">No Payment History</h5>
+          <p class="text-muted">You haven't made any payment requests yet.</p>
+        </div>
+      `;
+      return;
+    }
+    
+    const historyHtml = paymentRequests.map(request => {
+      const statusClass = getPaymentStatusClass(request.status);
+      const statusIcon = getPaymentStatusIcon(request.status);
+      
+      return `
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-md-8">
+                <div class="d-flex align-items-center mb-2">
+                  <span class="badge ${statusClass} me-2">
+                    <i class="bi ${statusIcon} me-1"></i>
+                    ${request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                  </span>
+                  <small class="text-muted">
+                    ${new Date(request.createdAt).toLocaleDateString()}
+                  </small>
+                </div>
+                <h6 class="mb-1">Payment Request</h6>
+                <p class="text-muted mb-1">
+                  <strong>Amount:</strong> $${request.amount} ${request.currency}
+                </p>
+                ${request.transactionId ? `
+                  <p class="text-muted mb-1">
+                    <strong>Transaction ID:</strong> ${request.transactionId}
+                  </p>
+                ` : ''}
+                ${request.notes ? `
+                  <p class="text-muted mb-0">
+                    <strong>Notes:</strong> ${request.notes}
+                  </p>
+                ` : ''}
+              </div>
+              <div class="col-md-4 text-end">
+                <div class="mb-2">
+                  <strong class="text-primary">$${request.amount}</strong>
+                </div>
+                ${request.proofImageUrl ? `
+                  <button class="btn btn-outline-primary btn-sm" onclick="viewPaymentProof('${request.proofImageUrl}')">
+                    <i class="bi bi-image me-1"></i>
+                    View Receipt
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    content.innerHTML = `
+      <div class="mb-3">
+        <h6>Recent Payment Requests</h6>
+        <p class="text-muted">Track the status of your payment submissions</p>
+      </div>
+      ${historyHtml}
+    `;
+  }
+  
+  function getPaymentStatusClass(status) {
+    switch (status) {
+      case 'approved': return 'bg-success';
+      case 'rejected': return 'bg-danger';
+      case 'pending': return 'bg-warning';
+      default: return 'bg-secondary';
+    }
+  }
+  
+  function getPaymentStatusIcon(status) {
+    switch (status) {
+      case 'approved': return 'bi-check-circle';
+      case 'rejected': return 'bi-x-circle';
+      case 'pending': return 'bi-clock';
+      default: return 'bi-question-circle';
+    }
+  }
+  
+  function viewPaymentProof(imageUrl) {
+    // Open image in new window/tab
+    window.open(imageUrl, '_blank');
+  }
+  
+  // Payment Status Polling System
+  let lastPaymentCheck = localStorage.getItem('lastPaymentCheck') || new Date().toISOString();
+  let lastBookingCheck = localStorage.getItem('lastBookingCheck') || new Date().toISOString();
+  let pollingInterval;
+  
+  function startPaymentStatusPolling() {
+    // Check immediately
+    checkPaymentStatusUpdates();
+    checkBookingStatusUpdates();
+    
+    // Then check every 30 seconds
+    pollingInterval = setInterval(() => {
+      checkPaymentStatusUpdates();
+      checkBookingStatusUpdates();
+    }, 30000);
+  }
+  
+  async function checkPaymentStatusUpdates() {
+    try {
+      const response = await fetch(`/api/payment-requests?since=${lastPaymentCheck}`);
+      if (!response.ok) return;
+      
+      const paymentRequests = await response.json();
+      
+      // Check for status changes
+      const updatedRequests = paymentRequests.filter(request => {
+        const lastCheck = new Date(lastPaymentCheck);
+        const requestDate = new Date(request.updatedAt);
+        return requestDate > lastCheck && request.status !== 'pending';
+      });
+      
+      // Add notifications for updated requests
+      updatedRequests.forEach(request => {
+        if (request.status === 'approved') {
+          addNotification('Booking Confirmed! 🎉', `Your payment of $${request.amount} has been approved and your booking is now confirmed. You will receive a confirmation email shortly.`, 'success');
+        } else if (request.status === 'rejected') {
+          addNotification('Booking Cancelled', `Your payment of $${request.amount} was not approved and your booking has been cancelled. Please contact support for assistance or submit a new payment.`, 'error');
+        }
+      });
+      
+      // Update last check time
+      lastPaymentCheck = new Date().toISOString();
+      localStorage.setItem('lastPaymentCheck', lastPaymentCheck);
+      
+    } catch (error) {
+      console.error('Error checking payment status:', error);
+    }
+  }
+  
+  async function checkBookingStatusUpdates() {
+    try {
+      const response = await fetch(`/api/bookings?since=${lastBookingCheck}`);
+      if (!response.ok) return;
+      
+      const bookings = await response.json();
+      
+      // Check for status changes
+      const updatedBookings = bookings.filter(booking => {
+        const lastCheck = new Date(lastBookingCheck);
+        const bookingDate = new Date(booking.updatedAt);
+        return bookingDate > lastCheck && booking.bookingStatus !== 'pending';
+      });
+      
+      // Add notifications for updated bookings (only if not already handled by payment requests)
+      updatedBookings.forEach(booking => {
+        if (booking.bookingStatus === 'confirmed') {
+          addNotification('Booking Confirmed! 🎉', `Your booking #${booking.bookingNumber} has been confirmed. You will receive a confirmation email shortly.`, 'success');
+        } else if (booking.bookingStatus === 'cancelled') {
+          addNotification('Booking Cancelled', `Your booking #${booking.bookingNumber} has been cancelled. Please contact support for assistance.`, 'error');
+        }
+      });
+      
+      // Update last check time
+      lastBookingCheck = new Date().toISOString();
+      localStorage.setItem('lastBookingCheck', lastBookingCheck);
+      
+    } catch (error) {
+      console.error('Error checking booking status:', error);
+    }
+  }
+  
+  // Stop polling when page is hidden
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+      }
+    } else {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+      }
+      <% if (typeof isAuthenticated !== 'undefined' && isAuthenticated) { %>
+      startPaymentStatusPolling();
+      <% } %>
+    }
+  });
+  
+  // Make functions globally accessible
+  window.addNotification = addNotification;
+  window.toggleNotificationPopup = toggleNotificationPopup;
+  window.closeNotificationPopup = closeNotificationPopup;
+  window.markAsRead = markAsRead;
+  window.markAllAsRead = markAllAsRead;
+  window.showPaymentHistory = showPaymentHistory;
+  window.viewPaymentProof = viewPaymentProof;
+</script>
+
+<style>
+  /* Ensure dropdown menu overlays page content consistently */
+  .dropdown-menu { 
+    z-index: 2000; 
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 160px;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 0.375rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.175);
+    display: none;
+  }
+  .dropdown-menu.show { 
+    display: block !important; 
+  }
+  
+  /* Ensure dropdown container has proper positioning */
+  .dropdown {
+    position: relative;
+  }
+  
+  /* Debug styles - remove after testing */
+  .dropdown-toggle:focus {
+    outline: 2px solid #0d6efd;
+    outline-offset: 2px;
+  }
+</style>
+

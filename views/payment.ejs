@@ -1,0 +1,2184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Page - The Magpie Trek And Tours</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+      <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/styles/payment.css">
+  <link rel="stylesheet" href="/styles/home.css">
+  
+  <!-- Stripe Elements -->
+  <script src="https://js.stripe.com/v3/"></script>
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <style>
+    /* Bank Details Styles */
+    #bankDetails .d-flex {
+      min-height: 24px;
+    }
+    
+    #bankDetails .text-primary {
+      color: #0d6efd !important;
+    }
+    
+    #qrImage {
+      transition: all 0.3s ease;
+    }
+    
+    #qrImage:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    /* Notification Styles */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      min-width: 300px;
+      max-width: 400px;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      transform: translateX(100%);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+    
+    .notification.success {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+    }
+    
+    .notification.error {
+      background: linear-gradient(135deg, #f44336, #d32f2f);
+      color: white;
+    }
+    
+    .notification.warning {
+      background: linear-gradient(135deg, #ff9800, #f57c00);
+      color: white;
+    }
+    
+    .notification.info {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      color: white;
+    }
+    
+    .notification-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    
+    .notification-content {
+      flex: 1;
+    }
+    
+    .notification-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .notification-message {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    .notification-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    
+    .notification-close:hover {
+      opacity: 1;
+    }
+    
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 9998;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .loading-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Map Styles */
+    #tourMap {
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border: 1px solid #e9ecef;
+    }
+    
+    /* Add to Cart Button Styles */
+    #addToCartBtn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    #addToCartBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+    
+    #addToCartBtn:active {
+      transform: translateY(0);
+    }
+    
+    #addToCartBtn.adding {
+      background-color: #ffc107;
+      border-color: #ffc107;
+      color: #000;
+    }
+    
+    #addToCartBtn.added {
+      background-color: #28a745;
+      border-color: #28a745;
+      animation: pulse 0.6s ease-in-out;
+    }
+    
+    #addToCartBtn.disabled {
+      background-color: #6c757d;
+      border-color: #6c757d;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+    
+    .cart-icon-bounce {
+      animation: bounce 0.6s ease-in-out;
+    }
+    
+    .cart-text-slide {
+      animation: slideIn 0.3s ease-in-out;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .tour-card {
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 15px;
+      border: 1px solid #e9ecef;
+    }
+    
+    .leaflet-popup-content {
+      margin: 8px 12px;
+      line-height: 1.4;
+    }
+    
+    .leaflet-popup-content h6 {
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .leaflet-popup-content p {
+      margin: 5px 0 0 0;
+      color: #666;
+      font-size: 14px;
+    }
+    
+    /* Star Rating Styles */
+    #starRating i {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-right: 5px;
+      font-size: 1.2em;
+      user-select: none;
+      color: #dee2e6;
+    }
+    
+    #starRating i:hover {
+      transform: scale(1.2);
+    }
+    
+    #starRating i.fa-solid {
+      color: #ffc107 !important;
+    }
+    
+    #starRating i.fa-regular {
+      color: #dee2e6 !important;
+    }
+    
+    #starRating {
+      display: flex;
+      align-items: center;
+    }
+    
+    /* Ensure stars are visible and clickable */
+    #starRating i {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <%- include('partials/navbar', { user: user, isAuthenticated: isAuthenticated, currentPage: 'payment' }) %>
+
+
+  
+
+<!-- Hero Section -->
+<section style="background-color: rgb(223, 240, 240); padding: 140px 0 0;">
+  <div class="p-5 pt-5">
+    <div style="flex-wrap: wrap;" class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3">
+        <h1><strong><%= tourPackage.title %></strong></h1>
+        <!-- Add to Cart Button -->
+        <button class="btn btn-success btn-lg" id="addToCartBtn" onclick="addToCart()">
+          <i class="bi bi-cart-plus me-2" id="cartIcon"></i>
+          <span id="cartText">Add to Cart</span>
+        </button>
+      </div>
+      <div class="d-flex gap-3">
+        <!-- Photos -->
+        <a href="#gallery" 
+           class="btn btn-outline-danger d-flex align-items-center gap-2">
+          <i class="fa-solid fa-image"></i> 
+          <%= (tourPackage.gallery && tourPackage.gallery.length > 0) ? tourPackage.gallery.length : 0 %> 
+          Photo<%= (tourPackage.gallery && tourPackage.gallery.length > 1) ? 's' : '' %>
+        </a>
+
+        <!-- Share -->
+        <div class="share-container">
+          <button type="button" class="btn btn-share btn-outline-danger">
+            <i class="fa-solid fa-share-nodes"></i>
+          </button>
+          <div   class="share-dropdown">
+            <a href="https://facebook.com" target="_blank" class="btn btn-share btn-outline-danger">
+              <i class="fa-brands fa-facebook"></i>
+            </a>
+            <a href="https://twitter.com" target="_blank" class="btn btn-outline-danger rounded">
+              <i class="fa-brands fa-twitter"></i>
+            </a>
+            <a href="https://wa.me/?text=Hello" target="_blank" class="btn btn-outline-danger rounded">
+              <i class="fa-brands fa-whatsapp"></i>
+            </a>
+            <a href="https://pinterest.com" target="_blank" class="btn  btn-outline-danger rounded">
+              <i class="fa-brands fa-pinterest"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+<div style="flex-wrap: wrap;" class="d-flex align-items-center">
+    <!-- Location Button -->
+    
+    <div class="mt-3">
+      <a href="#mapSection"
+         class="btn d-flex align-items-center gap-3 location"
+         style="border:none;">
+        <i class="fa-solid fa-location-dot"></i> <%= tourPackage.location || 'Pakistan\'s northern regions' %>
+      </a>
+    </div>
+
+<!-- Review Summary Button -->
+<div class="">
+  <a href="#reviews"
+     class="btn d-flex align-items-center justify-content-between review-summary w-100"
+     style="border:none;">
+
+    <!-- Left: Text -->
+    <span id="reviewSummaryText"><%= tourPackage.stars %>.0 (<%= tourPackage.reviews || 0 %> Reviews)</span>
+
+    <!-- Right: Stars -->
+    <span id="reviewSummaryStars" class="d-flex align-items-center"></span>
+
+  </a>
+</div>
+
+
+
+
+
+
+
+
+
+
+  <style>
+  .wishlist-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 35px;
+    border:none;
+    background:transparent;
+    color: #111;
+    padding: 10px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+    transition:  0.2s ease, transform 0.06s ease, color 0.2s;
+  }
+  
+  .wishlist-btn:active { transform: translateY(1px); }
+
+  .heart {
+    font-size: 20px;
+    transition: color 0.2s ease-in-out;
+  }
+
+  .wishlist-btn.filled .heart {
+    color: black; /* fill color */
+  }
+</style>
+
+
+
+
+ <div class="wishlist-heart">
+  <button id="wishlistBtn-heart" class="wishlist-btn" aria-pressed="false" type="button">
+    <i class="fa-regular fa-heart heart"></i>
+    <span class="label">Add to wishlist</span>
+  </button>
+</div>
+
+
+  <!-- Bootstrap JS (for buttons etc.) -->
+<script>
+  const btn = document.getElementById("wishlistBtn");
+  const label = btn.querySelector(".label");
+  const heart = btn.querySelector(".heart");
+
+  btn.addEventListener("click", () => {
+    btn.classList.toggle("filled");
+    const isFilled = btn.classList.contains("filled");
+
+    if (isFilled) {
+      heart.classList.remove("fa-regular");
+      heart.classList.add("fa-solid");
+      label.textContent = "Added to wishlist";
+    } else {
+      heart.classList.remove("fa-solid");
+      heart.classList.add("fa-regular");
+      label.textContent = "Add to wishlist";
+    }
+  });
+</script>
+
+</div>
+
+  </div>
+
+  <!-- carosel -->
+
+
+  <div class="carousel-container">
+  <div class="carousel-track" id="carouselTrack">
+    <% if (tourPackage.gallery && tourPackage.gallery.length > 0) { %>
+      <!-- Gallery Images Only -->
+      <% tourPackage.gallery.forEach(function(galleryImage) { %>
+        <img src="<%= (galleryImage.url && (galleryImage.url.startsWith('http') || galleryImage.url.startsWith('data:'))) 
+          ? galleryImage.url 
+          : adminBaseUrl + (galleryImage.url && galleryImage.url.startsWith('/') ? '' : '/') + (galleryImage.url || '') %>" 
+          alt="<%= galleryImage.alt || tourPackage.title %>">
+      <% }); %>
+    <% } else { %>
+      <!-- No gallery: show neutral placeholder, not the main tour image -->
+      <img src="/images/hero-img1.webp" alt="<%= tourPackage.title %>">
+    <% } %>
+  </div>
+
+  <div class="arrow arrow-left" onclick="prevSlide()"><i class="fa fa-chevron-left"></i></div>
+  <div class="arrow arrow-right" onclick="nextSlide()"><i class="fa fa-chevron-right"></i></div>
+</div>
+
+<script>
+// Initialize carousel when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+const track = document.getElementById('carouselTrack');
+  if (!track) return;
+  
+let images = Array.from(track.children);
+  if (images.length === 0) return;
+  
+let currentIndex = 0;
+const total = images.length;
+
+// clone first and last for seamless loop
+const firstClone = images[0].cloneNode(true);
+const lastClone = images[images.length -1].cloneNode(true);
+track.appendChild(firstClone);
+track.insertBefore(lastClone, images[0]);
+images = Array.from(track.children);
+currentIndex = 1; // start from actual first image
+updateCarousel();
+
+// move to currentIndex immediately (without animation)
+track.style.transition = 'none';
+track.style.transform = `translateX(${-currentIndex * (images[0].clientWidth + 30) + track.parentElement.clientWidth/2 - images[0].clientWidth/2}px)`;
+setTimeout(()=>{ track.style.transition = 'transform 0.5s ease-in-out'; }, 50);
+
+function updateCarousel() {
+  images.forEach(img => img.classList.remove('center'));
+  images[currentIndex].classList.add('center');
+
+  const offset = -currentIndex * (images[0].clientWidth + 30) + track.parentElement.clientWidth/2 - images[0].clientWidth/2;
+  track.style.transform = `translateX(${offset}px)`;
+}
+
+// next slide
+function nextSlide() {
+  currentIndex++;
+  updateCarousel();
+  track.addEventListener('transitionend', handleTransitionEnd);
+}
+
+// previous slide
+function prevSlide() {
+  currentIndex--;
+  updateCarousel();
+  track.addEventListener('transitionend', handleTransitionEnd);
+}
+
+// seamless loop handler
+function handleTransitionEnd() {
+  if(currentIndex === images.length - 1) { // reached first clone
+    track.style.transition = 'none';
+    currentIndex = 1;
+    updateCarousel();
+    setTimeout(()=>{ track.style.transition = 'transform 0.5s ease-in-out'; },50);
+  }
+  if(currentIndex === 0) { // reached last clone
+    track.style.transition = 'none';
+    currentIndex = images.length - 2;
+    updateCarousel();
+    setTimeout(()=>{ track.style.transition = 'transform 0.5s ease-in-out'; },50);
+  }
+  track.removeEventListener('transitionend', handleTransitionEnd);
+}
+
+  // Make functions globally accessible
+  window.nextSlide = nextSlide;
+  window.prevSlide = prevSlide;
+
+// auto slide every 3 seconds
+setInterval(nextSlide, 3000);
+});
+</script>
+  <!-- ICONS -->
+
+
+  <div style="flex-wrap: wrap;" class="col-md-6 ms-5 d-flex  justify-content-between align-left mt-4">
+
+    <!-- 1 -->
+    <div class="d-flex gap-3 mt-4 align-items-center">
+    <i class="fa-solid fa-calendar-days fa-xl mb-3" style="color: #000000;"></i>
+      <div>
+        <h6>Duration</h6>
+        <p style="color: gray;">7 days</p>
+      </div>
+    </div>
+    <!-- 2 -->
+    <div class="d-flex gap-3 mt-4 align-items-center">
+  <i class="fa-solid fa-user-group fa-xl mb-3" style="color: #000000;"></i>
+      <div>
+        <h6>Max people</h6>
+        <p style="color: gray;">50</p>
+      </div>
+    </div>
+    <!-- 3 -->
+    <div class="d-flex gap-3 mt-4 align-items-center">
+    <i class="fa-solid fa-circle-user fa-xl mb-3" style="color: #000000;"></i>
+      <div>
+        <h6>Min age</h6>
+        <p style="color: gray;">10 +</p>
+      </div>
+    </div>
+    <!-- 4 -->
+    <div class="d-flex gap-3 mt-4 align-items-center">
+    <i class="fa-solid fa-location-dot fa-xl mb-3" style="color: #000000;"></i>
+      <div>
+        <h6>Pick up</h6>
+        <p style="color: gray;">Airport</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- overview -->
+
+<section  class="align-items-start d-flex gap-5 p-5" > 
+
+<div class="align-items-start container col-md-7 ms-1" >
+
+ <!-- Overview Section -->
+  <div class="mb-4 " >
+    <div class="section-title" >Overview</div>
+    <p><%= tourPackage.description %></p>
+
+    
+  </div>
+
+<div class="container py-4">
+  <!-- Included/Excluded Section -->
+  <div>
+    <div class="section-title">Included/Excluded</div>
+    <div class="icon-list">
+      <div><i class="bi bi-check-circle"></i>Specialized bilingual guide</div>
+      <hr>
+      <div><i class="bi bi-check-circle"></i>Private Transport</div>
+      <div><i class="bi bi-x-circle"></i> Departure Taxes</div>
+      <div><i class="bi bi-check-circle"></i> Entrance fees (Cable car and Moon Valley)</div>
+      <div><i class="bi bi-x-circle"></i>Entry Fees</div>
+      <div><i class="bi bi-check-circle"></i> Box lunch water, banana apple and chocolate</div>
+      <div><i class="bi bi-x-circle"></i>5 Star Accommodation</div>
+        <div><i class="#"></i> </div>
+
+      <div><i class="bi bi-x-circle"></i> Airport Transfers</div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="container mt-5 mb-5">
+  <div class="row">
+    <div class="">
+      <hr class="ms-0">
+    </div>
+  </div>
+</div>
+<!--  top plan  -->
+ 
+    <div  class="container  ">
+        <div class="row ">
+            <div class="col-12 col-md-8 col-lg-6" style="width: 100% ; ">
+                <div class="tour-card">
+                    <div class="p-4">
+                        <!-- Header -->
+                        <div class="mb-4">
+                            <h2 class="mb-3 fw-bold text-dark">Tour Plan</h2>
+                            
+                            <!-- Duration, Elevation and Dropdown Icon in one row -->
+                            <div class="info-row" onclick="toggleDropdown()">
+                                <span class="duration-badge">Duration: <%= tourPackage.duration || 'Not specified' %></span>
+                                <span class="elevation-text">Location: <%= tourPackage.location || 'Pakistan\'s northern regions' %></span>
+                                <span class="expand-icon" id="expandIcon">^</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Route Highlights (Dropdown Content) -->
+                        <div class="route-highlights collapsed" id="routeHighlights">
+                            <h5>Description:</h5>
+                            <p><%= tourPackage.description %></p>
+                            
+                            <% if (tourPackage.highlights && tourPackage.highlights.length > 0) { %>
+                            <h5>Highlights:</h5>
+                            <ul>
+                                <% tourPackage.highlights.forEach(function(highlight) { %>
+                                    <li><%= highlight %></li>
+                                <% }); %>
+                            </ul>
+                            <% } %>
+                            
+                            <% if (tourPackage.included && tourPackage.included.length > 0) { %>
+                            <h5>What's Included:</h5>
+                            <ul>
+                                <% tourPackage.included.forEach(function(item) { %>
+                                    <li><%= item %></li>
+                                <% }); %>
+                            </ul>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('routeHighlights');
+            const icon = document.getElementById('expandIcon');
+            
+            if (dropdown.classList.contains('collapsed')) {
+                dropdown.classList.remove('collapsed');
+                icon.classList.add('rotated');
+            } else {
+                dropdown.classList.add('collapsed');
+                icon.classList.remove('rotated');
+            }
+        }
+    </script>
+
+</div>
+
+
+  
+  <div style="position: absolute;"  class="booking-card ">
+    <!-- Price Section -->
+    <p class="mb-1">From</p>
+    <p class="price-section mb-3">$<%= tourPackage.price.toLocaleString() %></p>
+    
+<div class="container">
+  <div class="row align-items-center mt-4 mb-4">
+    <!-- Left line -->
+    <div class="col">
+      <!-- ------------------------------------------------------------- -->
+       <div style="border: #000 dashed 1px;"></div>
+    </div>
+
+    <!-- Airplane Icon -->
+    <div class="col-auto">
+      <i style="position: absolute ; margin-top: -14px; margin-left: -50%;" class="fa-solid fa-plane fs-3 text-dark"></i>
+    </div>
+
+   
+  </div>
+</div>
+
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-3" id="bookingTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="booking-tab" data-bs-toggle="tab" data-bs-target="#booking" type="button" role="tab" style="padding-right: 180px;">Booking Form</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="enquiry-tab" data-bs-toggle="tab" data-bs-target="#enquiry" type="button" role="tab">Enquiry Form</button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="bookingTabsContent">
+      <!-- Booking Form -->
+      <div class="tab-pane fade show active" id="booking" role="tabpanel">
+        <form id="bookingForm">
+          <!-- Customer Information -->
+          <div class="row">
+            <div class="col-md-6">
+        <div class="mb-3">
+                <label class="form-label">First Name *</label>
+                <input type="text" class="form-control" id="firstName" value="<%= user.name ? user.name.split(' ')[0] : '' %>" required>
+        </div>
+        </div>
+            <div class="col-md-6">
+        <div class="mb-3">
+                <label class="form-label">Last Name *</label>
+                <input type="text" class="form-control" id="lastName" value="<%= user.name ? user.name.split(' ').slice(1).join(' ') : '' %>" required>
+        </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+        <div class="mb-3">
+                <label class="form-label">Email *</label>
+                <input type="email" class="form-control" id="email" value="<%= user.email || '' %>" required>
+        </div>
+            </div>
+            <div class="col-md-6">
+        <div class="mb-3">
+                <label class="form-label">Phone *</label>
+                <input type="tel" class="form-control" id="phone" required>
+              </div>
+            </div>
+        </div>
+
+          <div class="row">
+            <div class="col-md-6">
+        <div class="mb-3">
+                <label class="form-label">Nationality *</label>
+                <input type="text" class="form-control" id="nationality" required>
+          </div>
+          </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Postal Code *</label>
+                <input type="text" class="form-control" id="postalCode" required>
+              </div>
+          </div>
+        </div>
+
+          <!-- Travel Information -->
+          <div class="row">
+            <div class="col-md-6">
+        <div class="mb-3">
+                <label class="form-label">Departure Date *</label>
+                <input type="date" class="form-control" id="departureDate" required>
+          </div>
+          </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label">Return Date *</label>
+                <input type="date" class="form-control" id="returnDate" required>
+              </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Number of Travelers *</label>
+            <input type="number" class="form-control" id="numberOfTravelers" min="1" value="1" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Special Requests</label>
+            <textarea class="form-control" id="specialRequests" rows="3"></textarea>
+          </div>
+
+          <!-- Emergency Contact -->
+          <h6 class="mt-4 mb-3">Emergency Contact</h6>
+          <div class="row">
+            <div class="col-md-4">
+        <div class="mb-3">
+                <label class="form-label">Contact Name</label>
+                <input type="text" class="form-control" id="emergencyName">
+          </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Contact Phone</label>
+                <input type="tel" class="form-control" id="emergencyPhone">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Relationship</label>
+                <input type="text" class="form-control" id="emergencyRelationship">
+              </div>
+          </div>
+        </div>
+
+          <!-- Payment Section -->
+          <div class="mt-4">
+            <h6 class="mb-3">Payment Information</h6>
+            
+            <ul class="nav nav-pills mb-3" id="payMethodTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manualPay" type="button" role="tab">Manual Payment</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="stripe-tab" data-bs-toggle="tab" data-bs-target="#stripePay" type="button" role="tab" disabled title="Card payments are currently unavailable">Card (Stripe)</button>
+              </li>
+            </ul>
+
+            <div class="tab-content">
+              <!-- Manual Payment Tab -->
+              <div class="tab-pane fade show active" id="manualPay" role="tabpanel">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <div class="p-3 border rounded bg-light">
+                      <div class="d-flex flex-wrap align-items-start gap-3">
+                        <div>
+                          <img id="qrImage" src="" alt="Payment QR" style="width:160px;height:160px;object-fit:contain;border:1px solid #eee;border-radius:8px;display:none;">
+                        </div>
+                        <div class="flex-grow-1">
+                          <div class="fw-bold mb-2">
+                            <i class="bi bi-bank me-2"></i>Bank Details
+                          </div>
+                          <div class="small text-muted" id="bankDetailsEmpty" style="display:none;">
+                            <i class="bi bi-info-circle me-1"></i>Bank details will appear here once configured by the admin.
+                          </div>
+                          <div id="bankDetails" class="small">
+                            <div class="row g-2">
+                              <div class="col-12">
+                                <div class="d-flex align-items-center mb-1">
+                                  <i class="bi bi-building me-2 text-primary"></i>
+                                  <strong>Bank:</strong>
+                                  <span id="bankName" class="ms-2">-</span>
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="d-flex align-items-center mb-1">
+                                  <i class="bi bi-person me-2 text-primary"></i>
+                                  <strong>Account Name:</strong>
+                                  <span id="accountName" class="ms-2">-</span>
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="d-flex align-items-center mb-1">
+                                  <i class="bi bi-credit-card me-2 text-primary"></i>
+                                  <strong>Account Number:</strong>
+                                  <span id="accountNumber" class="ms-2">-</span>
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="d-flex align-items-center mb-1">
+                                  <i class="bi bi-bank2 me-2 text-primary"></i>
+                                  <strong>IBAN:</strong>
+                                  <span id="iban" class="ms-2">-</span>
+                                </div>
+                              </div>
+                              <div class="col-12" id="swiftSection" style="display:none;">
+                                <div class="d-flex align-items-center mb-1">
+                                  <i class="bi bi-globe me-2 text-primary"></i>
+                                  <strong>SWIFT:</strong>
+                                  <span id="swift" class="ms-2">-</span>
+                                </div>
+                              </div>
+                              <div class="col-12" id="instructionsSection" style="display:none;">
+                                <div class="mt-2 p-2 bg-white border rounded">
+                                  <div class="d-flex align-items-center mb-1">
+                                    <i class="bi bi-info-circle me-2 text-info"></i>
+                                    <strong>Instructions:</strong>
+                                  </div>
+                                  <div id="instructions" class="small"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Transaction ID / Reference *</label>
+                    <input type="text" class="form-control" id="txnId" placeholder="Enter transaction ID or reference number" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Amount Paid (USD) *</label>
+                    <input type="number" class="form-control" id="paidAmount" min="1" value="<%= tourPackage.price %>" required>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Payment Screenshot / Receipt *</label>
+                    <input type="file" class="form-control" id="paymentScreenshot" accept="image/*" required>
+                    <small class="form-text text-muted">Please upload a clear screenshot or receipt of your payment transaction</small>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-control" id="manualNotes" rows="2" placeholder="Any payment notes"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stripe Payment Tab -->
+              <div class="tab-pane fade" id="stripePay" role="tabpanel">
+                <div class="alert alert-info mb-0" role="alert">
+                  Card payments are temporarily unavailable. Please use Manual Payment to submit your payment.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Booking Summary -->
+          <div class="booking-summary mt-4 p-3 bg-light rounded">
+            <h6>Booking Summary</h6>
+            <div class="d-flex justify-content-between">
+              <span>Package: <%= tourPackage.title %></span>
+              <span>$<%= tourPackage.price.toLocaleString() %></span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>Travelers: <span id="travelerCount">1</span></span>
+              <span id="totalAmount">$<%= tourPackage.price.toLocaleString() %></span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between fw-bold">
+              <span>Total Amount:</span>
+              <span id="finalTotal">$<%= tourPackage.price.toLocaleString() %></span>
+            </div>
+        </div>
+
+        <!-- Booking Button -->
+          <button type="submit" class="btn btn-darkblue w-100 mt-3" id="submitBooking">
+            <span id="buttonText">Submit Payment</span>
+            <span id="spinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Enquiry Form -->
+      <div class="tab-pane fade" id="enquiry" role="tabpanel">
+        <div class="mb-3">
+          <label class="form-label">Name *</label>
+          <input type="text" class="form-control" placeholder="Your name">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email *</label>
+          <input type="email" class="form-control" placeholder="example@gmail.com">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Phone *</label>
+          <input type="text" class="form-control" placeholder="(229) 555-2872">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Address *</label>
+          <input type="text" class="form-control" placeholder="Your address">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Choose time</label>
+          <select class="form-select">
+            <option>From 01-10-2024 to 07-10-2024</option>
+            <option > From 22-10-2024 to 28-10-2024</option>
+            <option > From 15-10-2025 to 21-10-2025</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Check in</label>
+          <input type="text" class="form-control" value="01-10-2024">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Check out</label>
+          <input type="text" class="form-control" value="07-10-2024">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Guests</label>
+          <input type="number" class="form-control" value="1">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Package</label>
+          <select class="form-select">
+            <option>Select Package</option>
+            <option> Package-$5</option>
+            <option>Package-$10</option>
+            <option> Palage-$15</option>
+          </select>
+        </div>
+
+        <!-- Tools -->
+        <div class="mb-3">
+          <label class="form-label">Tools</label><br>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="camera">
+            <label class="form-check-label" for="camera">Camera - $5</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gps">
+            <label class="form-check-label" for="gps">GPS - $5</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="flashlight">
+            <label class="form-check-label" for="flashlight">Flashlight - $10</label>
+          </div>
+        </div>
+
+        <!-- Tour Guide -->
+        <div class="mb-3">
+          <label class="form-label">Tour Guide</label><br>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="guide" id="male">
+            <label class="form-check-label" for="male">Man - $5</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="guide" id="female">
+            <label class="form-check-label" for="female">Women - $5</label>
+          </div>
+        </div>
+
+        <!-- File Upload -->
+        <div class="mb-3">
+          <label class="form-label">File</label>
+          <input class="form-control" type="file">
+        </div>
+
+        <!-- Extra Services -->
+        <div class="mb-3">
+          <label class="form-label">Extra Services</label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="pickup">
+            <label class="form-check-label" for="pickup">Home Pickup</label>
+          </div>
+          <div class="mt-2">
+            <p class="mb-0">Adult: <strong>$10.00</strong> / per person</p>
+            <p class="mb-0">Children: <strong>$5.00</strong> / per person</p>
+            <p class="mb-0">Baby: <strong>$1.00</strong> / per person</p>
+          </div>
+        </div>
+
+        <!-- Services -->
+        <div class="mb-3">
+          <label class="form-label">Services</label>
+          <select class="form-select">
+            <option>Select Healthy Care</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Message *</label>
+          <textarea class="form-control" rows="3" placeholder="Your message"></textarea>
+        </div>
+
+        <!-- Submit Enquiry -->
+        <button class="btn btn-darkblue w-100">Send Enquiry</button>
+      </div>
+    </div>
+  </div> 
+
+
+     
+
+
+    </section>
+
+    <!-- hr -->
+    <div class="container mt-5">
+  <div class="row">
+    <div class="col-md-7">
+      <hr class="ms-0">
+    </div>
+  </div>
+</div>
+
+<!-- Map Section -->
+<section id="mapSection" class="">
+  <div class="container">
+    <h1 class="mb-3 "><strong>Tour Map</strong></h1>
+      <div class="row justify-content-left">
+    <div class="col-12 col-md-7">
+      <div class="tour-card">
+        <div class="p-4">
+          <div id="tourMap" style="height: 400px; border-radius: 10px; overflow: hidden; position: relative;">
+            <div id="mapLoading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; text-align: center; background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px;">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading map...</span>
+      </div>
+              <p class="mt-2 mb-0">Loading map...</p>
+            </div>
+          </div>
+          <div class="mt-3">
+            <p class="text-muted mb-0">
+              <i class="bi bi-pin-map me-2"></i>
+              <strong>Location:</strong> <%= tourPackage.location || 'Pakistan\'s northern regions' %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  
+</section>
+<!-- hr  -->
+
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-7">
+      <hr class="ms-0">
+    </div>
+  </div>
+</div>
+<!-- Reviews Section -->
+<section id="reviews" class="my-5">
+  <div class="container">
+
+    <!-- Reviews List -->
+    <div id="reviewsList">
+      <% if (reviews && reviews.length > 0) { %>
+        <% reviews.forEach(function(review) { %>
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <h6 class="card-title mb-1"><%= review.title %></h6>
+                  <p class="text-muted mb-1">By <%= review.userName %> on <%= new Date(review.createdAt).toLocaleDateString() %></p>
+                </div>
+                <div class="text-warning">
+                  <% for (let i = 1; i <= 5; i++) { %>
+                    <% if (i <= review.rating) { %>
+                      <i class="fa-solid fa-star"></i>
+                    <% } else { %>
+                      <i class="fa-regular fa-star"></i>
+                    <% } %>
+                  <% } %>
+                </div>
+              </div>
+              <p class="card-text"><%= review.comment %></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted"><%= review.helpful %> people found this helpful</small>
+                <button class="btn btn-sm btn-outline-primary" onclick="markHelpful('<%= review._id %>')">
+                  <i class="fa fa-thumbs-up"></i> Helpful
+                </button>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="text-center py-4">
+          <p class="text-muted">No reviews yet. Be the first to review this tour!</p>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Add Review -->
+    <div style="border: none; background-color: transparent;" class="card p-3 mt-4 col-md-7">
+      <h5 class="mb-2">Add a Review</h5>
+      <p class="text-muted">Your email address will not be published. Required fields are marked *</p>
+
+      <h6>Our Rating *</h6>
+      <div id="starRating" class="mb-2 text-warning fs-5">
+        <i class="fa-regular fa-star" data-value="1"></i>
+        <i class="fa-regular fa-star" data-value="2"></i>
+        <i class="fa-regular fa-star" data-value="3"></i>
+        <i class="fa-regular fa-star" data-value="4"></i>
+        <i class="fa-regular fa-star" data-value="5"></i>
+      </div>
+      <input type="hidden" id="ratingValue" required>
+
+      <!-- ✅ Checkbox -->
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="saveInfo">
+        <label class="form-check-label" for="saveInfo">
+          Save my name, email, and website in this browser for the next time I comment.
+        </label>
+      </div>
+
+      <form id="reviewForm">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" id="name" class="form-control" value="<%= user.name || '' %>" placeholder="Your name (optional)">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Email *</label>
+            <input type="email" id="email" class="form-control" value="<%= user.email || '' %>" required placeholder="your.email@example.com">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Review Title</label>
+          <input type="text" id="reviewTitle" class="form-control" placeholder="Title of your review (optional)">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Your Review</label>
+          <textarea id="reviewText" class="form-control" rows="3" placeholder="Share your experience (optional)"></textarea>
+        </div>
+
+        <button type="submit" class="btn text-white" style="background-color:navy;">Submit</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Debug info from server-side variables
+  const __paymentPkgId = '<%= tourPackage._id %>';
+  const __paymentImageUrl = '<%= tourPackage.imageUrl || '' %>';
+  const __paymentGallery = <%- JSON.stringify(tourPackage.gallery || []) %>;
+  const __isHiking = <%- JSON.stringify(!!tourPackage.isHiking) %>;
+  console.log('[payment] packageId:', __paymentPkgId);
+  console.log('[payment] imageUrl:', __paymentImageUrl);
+  console.log('[payment] galleryCount:', __paymentGallery.length);
+  console.log('[payment] galleryURLs:', __paymentGallery.map(g => g && g.url));
+  console.log('[payment] isHiking:', __isHiking);
+
+  const stars = document.querySelectorAll('#starRating i');
+  const ratingValue = document.getElementById('ratingValue');
+  const reviewsList = document.getElementById('reviewsList');
+  const reviewSummaryText = document.getElementById('reviewSummaryText');
+  const reviewSummaryStars = document.getElementById('reviewSummaryStars');
+
+  let reviews = [];
+
+
+  // render stars
+  function renderStars(rating) {
+    let starsHtml = "";
+    for (let i = 1; i <= 5; i++) {
+      if (i <= Math.floor(rating)) {
+        starsHtml += '<i class="fa-solid fa-star text-warning"></i>';
+      } else if (i - rating <= 0.5 && i - rating > 0) {
+        starsHtml += '<i class="fa-regular fa-star-half-stroke text-warning"></i>';
+      } else {
+        starsHtml += '<i class="fa-regular fa-star text-warning"></i>';
+      }
+    }
+    return starsHtml;
+  }
+
+  // update summary
+  function updateSummary(reviewsData) {
+    if (!reviewsData || reviewsData.length === 0) {
+      reviewSummaryText.textContent = "0.0 (0 Reviews)";
+      reviewSummaryStars.innerHTML = renderStars(0);
+      return;
+    }
+    let avg = reviewsData.reduce((sum, r) => sum + r.rating, 0) / reviewsData.length;
+    avg = Math.round(avg * 10) / 10;
+    reviewSummaryText.textContent = `${avg} (${reviewsData.length} Reviews)`;
+    reviewSummaryStars.innerHTML = renderStars(avg);
+  }
+
+  // render reviews
+  function renderReviews(reviewsData) {
+    if (!reviewsData) return;
+    
+    reviewsList.innerHTML = "";
+    reviewsData.forEach(r => {
+      let reviewCard = `
+        <div class="card col-md-7 mb-3 p-3 d-flex flex-row align-items-start">
+          <!-- Profile -->
+          <img src="https://via.placeholder.com/50" class="rounded-circle me-3 " alt="User">
+
+          <!-- Review Content -->
+          <div class="flex-grow-1">
+            <div class="d-flex justify-content-between">
+              <strong>${r.userName}</strong>
+              <div class="text-warning">${renderStars(r.rating)}</div>
+            </div>
+            <small class="text-muted">${new Date(r.createdAt).toLocaleDateString()}</small>
+            <p class="mt-2 mb-0"><strong>${r.title}</strong></p>
+            <p class="mt-2 mb-0">${r.comment}</p>
+          </div>
+        </div>`;
+      reviewsList.innerHTML += reviewCard;
+    });
+    updateSummary(reviewsData);
+  }
+
+  // Star rating functionality
+  let starElements, ratingValueElement;
+
+  // Initialize stars
+  function initializeStars() {
+    console.log('Initializing stars...');
+    starElements = document.querySelectorAll('#starRating i');
+    ratingValueElement = document.getElementById('ratingValue');
+    
+    console.log('Stars found:', starElements.length);
+    console.log('Rating value element:', ratingValueElement);
+    
+    if (starElements.length === 0) {
+      console.error('No stars found!');
+      return;
+    }
+    
+    starElements.forEach((star, index) => {
+      console.log(`Star ${index + 1}:`, star, 'data-value:', star.getAttribute('data-value'));
+      star.addEventListener('click', () => {
+        const value = parseInt(star.getAttribute('data-value'));
+        console.log('Star clicked, value:', value);
+        if (ratingValueElement) {
+          ratingValueElement.value = value;
+        }
+        updateStarDisplay(value);
+        
+        // Visual feedback
+        star.style.transform = 'scale(1.3)';
+        setTimeout(() => {
+          star.style.transform = 'scale(1)';
+        }, 200);
+        
+        // Show rating value for debugging
+        showNotification('info', 'Rating Selected', `You selected ${value} star${value > 1 ? 's' : ''}`);
+      });
+
+      star.addEventListener('mouseover', () => {
+        const value = parseInt(star.getAttribute('data-value'));
+        updateStarDisplay(value);
+      });
+    });
+
+    // Reset stars on mouse leave
+    const starRatingContainer = document.getElementById('starRating');
+    if (starRatingContainer) {
+      starRatingContainer.addEventListener('mouseleave', () => {
+        const currentRating = parseInt(ratingValueElement?.value) || 0;
+        updateStarDisplay(currentRating);
+      });
+    }
+  }
+
+  function updateStarDisplay(rating) {
+    console.log('Updating star display for rating:', rating);
+    if (!starElements) return;
+    
+    starElements.forEach((star, index) => {
+      const starValue = index + 1;
+      if (starValue <= rating) {
+        star.classList.remove('fa-regular');
+        star.classList.add('fa-solid');
+        console.log(`Star ${starValue}: solid`);
+      } else {
+        star.classList.remove('fa-solid');
+        star.classList.add('fa-regular');
+        console.log(`Star ${starValue}: regular`);
+      }
+    });
+  }
+
+  // Initialize stars when DOM is loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing stars...');
+    initializeStars();
+  });
+
+  // Fallback initialization after a delay
+  setTimeout(() => {
+    if (!starElements || starElements.length === 0) {
+      console.log('Fallback initialization...');
+      initializeStars();
+    }
+  }, 2000);
+
+  // Load reviews function
+  async function loadReviews() {
+    try {
+      const response = await fetch(`/api/reviews/<%= tourPackage._id %>`);
+      if (response.ok) {
+        const reviews = await response.json();
+        console.log('Loaded reviews:', reviews);
+        renderReviews(reviews);
+      }
+    } catch (error) {
+      console.error('Error loading reviews:', error);
+    }
+  }
+
+  // Load reviews on page load
+  loadReviews();
+
+  // form submit
+  document.getElementById('reviewForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const title = document.getElementById('reviewTitle').value.trim();
+    const text = document.getElementById('reviewText').value.trim();
+    const rating = parseInt(ratingValueElement?.value || 0);
+
+    console.log('Form submission data:', { name, email, title, text, rating });
+
+    // Only require email and rating
+    if (!email) {
+      showNotification('warning', 'Email Required', 'Please enter your email address.');
+      return;
+    }
+
+    if (!rating) {
+      showNotification('warning', 'Rating Required', 'Please select a rating before submitting your review.');
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      showNotification('warning', 'Invalid Email', 'Please enter a valid email address.');
+      return;
+    }
+
+    try {
+      console.log('Submitting review:', {
+        tourPackageId: '<%= tourPackage._id %>',
+        userName: '<%= user.name || "" %>',
+        userEmail: '<%= user.email || "" %>',
+        rating: rating,
+        title: title,
+        comment: text
+      });
+
+      // Check if user is authenticated
+      if (!<%= user ? 'true' : 'false' %>) {
+        showNotification('error', 'Authentication Required', 'Please log in to submit a review.');
+        return;
+      }
+
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tourPackageId: '<%= tourPackage._id %>',
+          userName: name || '<%= user.name || "" %>',
+          userEmail: email,
+          rating: rating,
+          title: title || 'Review',
+          comment: text || 'No comment provided'
+        })
+      });
+
+      console.log('Review response status:', response.status);
+      console.log('Review response headers:', response.headers);
+
+      if (response.ok) {
+        const result = await response.json();
+        showNotification('success', 'Review Submitted', 'Thank you for your review! It has been published successfully.');
+        
+        // Clear the form
+        document.getElementById('reviewForm').reset();
+        if (ratingValueElement) {
+          ratingValueElement.value = '';
+        }
+        updateStarDisplay(0);
+        
+        // Reload reviews to show the new review
+        loadReviews();
+      } else {
+        let errorMessage = 'Failed to submit review. Please try again.';
+        try {
+          const error = await response.json();
+          errorMessage = error.error || errorMessage;
+          console.error('Review submission error:', error);
+        } catch (e) {
+          console.error('Error parsing response:', e);
+          errorMessage = `Server error: ${response.status} ${response.statusText}`;
+        }
+        showNotification('error', 'Review Failed', errorMessage);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showNotification('error', 'Review Failed', 'An error occurred while submitting your review. Please try again.');
+    }
+  });
+
+  // Mark review as helpful
+  window.markHelpful = async function(reviewId) {
+    try {
+      // This would need a backend endpoint to handle helpful votes
+      showNotification('info', 'Thank You!', 'Your feedback has been recorded.');
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  // Notification System
+  function showNotification(type, title, message, duration = 5000) {
+    const container = document.getElementById('notificationContainer');
+    if (!container) return;
+    
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    
+    const icons = {
+      success: 'bi-check-circle-fill',
+      error: 'bi-exclamation-triangle-fill',
+      warning: 'bi-exclamation-circle-fill',
+      info: 'bi-info-circle-fill'
+    };
+    
+    notification.innerHTML = `
+      <div class="notification-icon">
+        <i class="bi ${icons[type] || icons.info}"></i>
+        </div>
+      <div class="notification-content">
+        <div class="notification-title">${title}</div>
+        <div class="notification-message">${message}</div>
+          </div>
+      <button class="notification-close" onclick="hideNotification(this)">
+        <i class="bi bi-x"></i>
+      </button>
+    `;
+    
+    container.appendChild(notification);
+    
+    // Trigger animation
+    setTimeout(() => notification.classList.add('show'), 100);
+    
+    // Auto hide after duration
+    setTimeout(() => hideNotification(notification.querySelector('.notification-close')), duration);
+  }
+  
+  function hideNotification(closeBtn) {
+    const notification = closeBtn.closest('.notification');
+    if (notification) {
+      notification.classList.remove('show');
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300);
+    }
+  }
+  
+  function showLoading() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+      overlay.style.display = 'flex';
+    }
+  }
+  
+  function hideLoading() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+      overlay.style.display = 'none';
+    }
+  }
+
+  // Stripe disabled - keep UI but no processing
+  let stripe, elements, cardElement, clientSecret;
+  async function initializeStripe() {
+    const stripePane = document.getElementById('stripePay');
+    if (stripePane) {
+      // Nothing to initialize; card payments disabled
+      console.log('Stripe disabled: manual payments only');
+    }
+  }
+
+  // Update booking summary when number of travelers changes
+  const travelerInput = document.getElementById('numberOfTravelers');
+  if (travelerInput) {
+    travelerInput.addEventListener('input', function() {
+      const travelers = parseInt(this.value) || 1;
+      const pricePerPerson = <%= tourPackage.price %>;
+      const totalAmount = travelers * pricePerPerson;
+      
+      const travelerCount = document.getElementById('travelerCount');
+      const totalAmountEl = document.getElementById('totalAmount');
+      const finalTotal = document.getElementById('finalTotal');
+      const buttonText = document.getElementById('buttonText');
+      
+      if (travelerCount) travelerCount.textContent = travelers;
+      if (totalAmountEl) totalAmountEl.textContent = '$' + totalAmount.toLocaleString();
+      if (finalTotal) finalTotal.textContent = '$' + totalAmount.toLocaleString();
+      if (buttonText) buttonText.textContent = 'Book Now - $' + totalAmount.toLocaleString();
+    });
+  }
+
+  // Handle form submission
+  const bookingForm = document.getElementById('bookingForm');
+  if (bookingForm) {
+    bookingForm.addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const submitButton = document.getElementById('submitBooking');
+      const buttonText = document.getElementById('buttonText');
+      const spinner = document.getElementById('spinner');
+
+    // Validate form before submission
+    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'nationality', 'postalCode', 'departureDate', 'returnDate'];
+    const missingFields = requiredFields.filter(field => !document.getElementById(field).value.trim());
+    
+    if (missingFields.length > 0) {
+      showNotification('warning', 'Missing Information', 'Please fill in all required fields before proceeding.');
+      return;
+    }
+    
+    // Validate dates
+    const departureDate = new Date(document.getElementById('departureDate').value);
+    const returnDate = new Date(document.getElementById('returnDate').value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (departureDate < today) {
+      showNotification('warning', 'Invalid Date', 'Departure date cannot be in the past.');
+      return;
+    }
+    
+    if (returnDate <= departureDate) {
+      showNotification('warning', 'Invalid Date', 'Return date must be after departure date.');
+      return;
+    }
+
+    // Show loading state
+    submitButton.disabled = true;
+    buttonText.style.display = 'none';
+    spinner.style.display = 'inline-block';
+    showLoading();
+
+    try {
+      // Determine selected payment method
+      const manualActive = document.getElementById('manualPay')?.classList.contains('active') || document.getElementById('manualPay')?.classList.contains('show');
+      if (manualActive) {
+        // Manual payment submission
+        const txnId = document.getElementById('txnId').value.trim();
+        const paidAmount = parseFloat(document.getElementById('paidAmount').value);
+        const paymentScreenshot = document.getElementById('paymentScreenshot').files[0];
+        
+        if (!txnId || !paidAmount || paidAmount <= 0 || !paymentScreenshot) {
+          showNotification('warning', 'Missing Payment Info', 'Please provide a valid transaction/reference ID, amount paid, and payment screenshot.');
+          throw new Error('Invalid manual payment fields');
+        }
+
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append('tourPackageId', __isHiking ? '' : '<%= tourPackage._id %>');
+        formData.append('hikingId', __isHiking ? '<%= tourPackage._id %>' : '');
+        formData.append('amount', paidAmount);
+        formData.append('currency', 'USD');
+        formData.append('paymentMethod', 'bank_transfer');
+        formData.append('transactionId', txnId);
+        formData.append('paymentScreenshot', paymentScreenshot);
+        formData.append('notes', document.getElementById('manualNotes').value);
+        
+        // Add customer and travel information for booking creation
+        const customerInfo = {
+          firstName: document.getElementById('firstName').value,
+          lastName: document.getElementById('lastName').value,
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          nationality: document.getElementById('nationality').value,
+          emergencyContact: {
+            name: document.getElementById('emergencyName').value,
+            phone: document.getElementById('emergencyPhone').value,
+            relationship: document.getElementById('emergencyRelationship').value
+          }
+        };
+        
+        const travelInfo = {
+          departureDate: document.getElementById('departureDate').value,
+          returnDate: document.getElementById('returnDate').value,
+          numberOfTravelers: parseInt(document.getElementById('numberOfTravelers').value),
+          specialRequests: document.getElementById('specialRequests').value
+        };
+        
+        formData.append('customerInfo', JSON.stringify(customerInfo));
+        formData.append('travelInfo', JSON.stringify(travelInfo));
+
+        const manualResp = await fetch('/api/manual-payment', {
+          method: 'POST',
+          body: formData
+        });
+        if (!manualResp.ok) {
+          const err = await manualResp.json().catch(()=>({error:'Failed'}));
+          showNotification('error', 'Submission Failed', err.error || 'Failed to submit manual payment.');
+          throw new Error(err.error || 'manual submit failed');
+        }
+        showNotification('success', 'Payment Submitted', 'Your payment request has been submitted. We will verify and confirm your booking.');
+        
+        // Add notification to notification system
+        if (typeof addNotification === 'function') {
+          addNotification('Payment Request Submitted', `Your payment of $${paidAmount} has been submitted for review. We will notify you once it's approved.`, 'success');
+        }
+        return;
+      }
+
+      // Card (Stripe) flow disabled
+      showNotification('info', 'Card Unavailable', 'Card payments are currently unavailable. Please use Manual Payment.');
+      if (typeof addNotification === 'function') {
+        addNotification('Card Unavailable', 'Please submit payment using Manual Payment.', 'info');
+      }
+      throw new Error('Stripe disabled');
+
+      if (clientSecret === undefined) {
+        console.log('Simulating payment for demo purposes');
+        showNotification('info', 'Demo Mode', 'This is a demo booking. No actual payment was processed.');
+        
+        // Create a mock payment intent for demo
+        const mockPaymentIntent = {
+          id: 'pi_demo_' + Date.now(),
+          status: 'succeeded'
+        };
+        
+        // Proceed with booking creation
+        const bookingData = {
+          tourPackageId: __isHiking ? null : '<%= tourPackage._id %>',
+          hikingId: __isHiking ? '<%= tourPackage._id %>' : null,
+          customerInfo: {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            nationality: document.getElementById('nationality').value,
+            emergencyContact: {
+              name: document.getElementById('emergencyName').value,
+              phone: document.getElementById('emergencyPhone').value,
+              relationship: document.getElementById('emergencyRelationship').value
+            }
+          },
+          travelInfo: {
+            departureDate: document.getElementById('departureDate').value,
+            returnDate: document.getElementById('returnDate').value,
+            numberOfTravelers: parseInt(document.getElementById('numberOfTravelers').value),
+            specialRequests: document.getElementById('specialRequests').value
+          },
+          paymentInfo: {
+            amount: <%= tourPackage.price %> * parseInt(document.getElementById('numberOfTravelers').value),
+            currency: 'USD'
+          },
+          stripePaymentIntentId: mockPaymentIntent.id,
+          stripeChargeId: mockPaymentIntent.id
+        };
+
+        const bookingResponse = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(bookingData)
+        });
+
+        if (!bookingResponse.ok) {
+          const error = await bookingResponse.json();
+          showNotification('error', 'Booking Failed', error.error || 'Failed to create booking. Please try again.');
+          throw new Error(error.error || 'Failed to create booking');
+        }
+
+        const { booking } = await bookingResponse.json();
+
+        // Show success notification and popup
+        showNotification('success', 'Demo Booking Confirmed!', `Your demo booking #${booking.bookingNumber} has been created successfully.`);
+        
+        // Add notification to notification system
+        if (typeof addNotification === 'function') {
+          addNotification('Demo Payment Completed', `Your demo payment of $${booking.paymentInfo.amount} has been processed. Booking #${booking.bookingNumber} is confirmed.`, 'info');
+        }
+        
+        showBookingReceipt(booking);
+        return;
+      }
+
+      // unreachable since Stripe is disabled
+
+    } catch (error) {
+      console.error('Booking error:', error);
+      showNotification('error', 'Booking Failed', error.message || 'An unexpected error occurred. Please try again.');
+    } finally {
+      // Reset button state
+      if (submitButton) submitButton.disabled = false;
+      if (buttonText) buttonText.style.display = 'inline';
+      if (spinner) spinner.style.display = 'none';
+      hideLoading();
+    }
+    });
+  }
+
+  // Show booking receipt popup
+  function showBookingReceipt(booking) {
+    const product = booking.tourPackageId || booking.hikingId || {};
+    const productTitle = product.title || 'Tour';
+    const productLocation = product.location || '—';
+    const productDuration = product.duration || '—';
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.id = 'bookingReceiptModal';
+    modal.setAttribute('data-bs-backdrop', 'static');
+    modal.setAttribute('data-bs-keyboard', 'false');
+    
+    modal.innerHTML = `
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title">
+              <i class="bi bi-check-circle-fill me-2"></i>
+              Booking Confirmed!
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Booking Details</h6>
+                <p><strong>Booking Number:</strong> ${booking.bookingNumber}</p>
+                <p><strong>Package:</strong> ${productTitle}</p>
+                <p><strong>Location:</strong> ${productLocation}</p>
+                <p><strong>Duration:</strong> ${productDuration}</p>
+                <p><strong>Travelers:</strong> ${booking.travelInfo.numberOfTravelers}</p>
+                <p><strong>Departure:</strong> ${new Date(booking.travelInfo.departureDate).toLocaleDateString()}</p>
+                <p><strong>Return:</strong> ${new Date(booking.travelInfo.returnDate).toLocaleDateString()}</p>
+      </div>
+              <div class="col-md-6">
+                <h6>Customer Information</h6>
+                <p><strong>Name:</strong> ${booking.customerInfo.firstName} ${booking.customerInfo.lastName}</p>
+                <p><strong>Email:</strong> ${booking.customerInfo.email}</p>
+                <p><strong>Phone:</strong> ${booking.customerInfo.phone}</p>
+                <p><strong>Nationality:</strong> ${booking.customerInfo.nationality}</p>
+                ${booking.customerInfo.emergencyContact.name ? `
+                  <h6 class="mt-3">Emergency Contact</h6>
+                  <p><strong>Name:</strong> ${booking.customerInfo.emergencyContact.name}</p>
+                  <p><strong>Phone:</strong> ${booking.customerInfo.emergencyContact.phone}</p>
+                  <p><strong>Relationship:</strong> ${booking.customerInfo.emergencyContact.relationship}</p>
+                ` : ''}
+    </div>
+        </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Payment Information</h6>
+                <p><strong>Amount Paid:</strong> $${booking.paymentInfo.amount.toLocaleString()}</p>
+                <p><strong>Payment Status:</strong> <span class="badge bg-success">${booking.paymentInfo.paymentStatus}</span></p>
+                <p><strong>Payment Date:</strong> ${new Date(booking.paymentInfo.paymentDate).toLocaleString()}</p>
+          </div>
+              <div class="col-md-6">
+                <h6>Next Steps</h6>
+                <ul class="list-unstyled">
+                  <li><i class="bi bi-check text-success me-2"></i> Confirmation email sent</li>
+                  <li><i class="bi bi-clock text-warning me-2"></i> Detailed itinerary within 24 hours</li>
+                  <li><i class="bi bi-person text-info me-2"></i> Tour guide contact before departure</li>
+                </ul>
+        </div>
+      </div>
+    </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="window.location.href='/profile'">View My Bookings</button>
+        </div>
+          </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    const bootstrapModal = new bootstrap.Modal(modal);
+    bootstrapModal.show();
+
+    // Remove modal from DOM when hidden
+    modal.addEventListener('hidden.bs.modal', function() {
+      document.body.removeChild(modal);
+    });
+  }
+
+  // Initialize Map
+  function initializeMap() {
+    console.log('Initializing map...');
+    
+    // Check if Leaflet is loaded
+    if (typeof L === 'undefined') {
+      console.error('Leaflet is not loaded');
+      const loadingElement = document.getElementById('mapLoading');
+      if (loadingElement) {
+        loadingElement.innerHTML = '<p class="text-danger">Map service unavailable. Please refresh the page.</p>';
+      }
+      return;
+    }
+    
+    // Check if map container exists
+    const mapContainer = document.getElementById('tourMap');
+    if (!mapContainer) {
+      console.error('Map container not found');
+      return;
+    }
+    
+    // Default coordinates for Pakistan (center of the country)
+    let defaultLat = 30.3753;
+    let defaultLng = 69.3451;
+    let locationName = '<%= tourPackage.location || "Pakistan\'s northern regions" %>';
+    
+    // Known coordinates for popular Pakistani tour locations
+    const knownLocations = {
+      'hunza': { lat: 36.3167, lng: 74.6500 },
+      'skardu': { lat: 35.2971, lng: 75.6333 },
+      'gilgit': { lat: 35.9211, lng: 74.3081 },
+      'chitral': { lat: 35.8514, lng: 71.7864 },
+      'swat': { lat: 34.7800, lng: 72.3600 },
+      'k2': { lat: 35.8814, lng: 76.5131 },
+      'nanga parbat': { lat: 35.2375, lng: 74.5892 },
+      'fairy meadows': { lat: 35.4000, lng: 74.6000 },
+      'deosai': { lat: 35.0167, lng: 75.4167 },
+      'kaghan': { lat: 34.8000, lng: 73.5000 },
+      'neelum valley': { lat: 34.5833, lng: 73.9167 },
+      'azad kashmir': { lat: 33.9258, lng: 73.7811 },
+      'bagrot': { lat: 35.9211, lng: 74.3081 },
+      'bagrot valley': { lat: 35.9211, lng: 74.3081 }
+    };
+    
+    // Check if we have known coordinates for this location
+    const locationKey = locationName.toLowerCase();
+    for (const [key, coords] of Object.entries(knownLocations)) {
+      if (locationKey.includes(key)) {
+        defaultLat = coords.lat;
+        defaultLng = coords.lng;
+        console.log(`Found known location: ${key} at ${defaultLat}, ${defaultLng}`);
+        break;
+      }
+    }
+    
+    // Initialize the map with fallback coordinates
+    try {
+      const map = L.map('tourMap').setView([defaultLat, defaultLng], 10);
+      
+      // Add OpenStreetMap tiles with error handling
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 18
+      }).addTo(map);
+      
+      // Hide loading indicator
+      const loadingElement = document.getElementById('mapLoading');
+      if (loadingElement) {
+        loadingElement.style.display = 'none';
+      }
+      
+      // Add a marker for the tour location
+      const marker = L.marker([defaultLat, defaultLng]).addTo(map);
+      marker.bindPopup(`
+        <div style="text-align: center;">
+          <h6 style="margin: 0; color: #333;"><%= tourPackage.title %></h6>
+          <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;"><%= tourPackage.location || "Pakistan's northern regions" %></p>
+      </div>
+      `).openPopup();
+      
+      // Add a circle to show the general area
+      L.circle([defaultLat, defaultLng], {
+        color: '#007bff',
+        fillColor: '#007bff',
+        fillOpacity: 0.1,
+        radius: 10000 // 10km radius
+      }).addTo(map);
+      
+      console.log('Map initialized successfully');
+      
+    } catch (error) {
+      console.error('Error initializing map:', error);
+      const loadingElement = document.getElementById('mapLoading');
+      if (loadingElement) {
+        loadingElement.innerHTML = '<p class="text-danger">Failed to load map. Please refresh the page.</p>';
+      }
+    }
+  }
+
+  // Initialize Stripe when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing Stripe...');
+    initializeStripe();
+    // Fetch admin payment settings for manual payment
+    fetchPaymentSettings();
+    
+    // Initialize map with a slight delay to ensure container is rendered
+    setTimeout(() => {
+      initializeMap();
+    }, 500);
+    
+    // Show welcome notification
+    setTimeout(() => {
+      showNotification('info', 'Welcome!', 'Fill out the form below to book your amazing tour experience.');
+    }, 1000);
+  });
+
+  async function fetchPaymentSettings() {
+    try {
+      // Fetch payment settings from our API
+      const resp = await fetch('/api/payment-settings');
+      if (!resp.ok) {
+        console.log('Payment settings not available');
+        return;
+      }
+      const data = await resp.json();
+      
+      // Set QR image - construct full URL
+      const qrImg = document.getElementById('qrImage');
+      if (data.qrImageUrl) {
+        qrImg.src = `${window.location.origin}${data.qrImageUrl}`;
+        qrImg.style.display = 'block';
+      }
+      
+      // Update bank details with new structure
+      const emptyEl = document.getElementById('bankDetailsEmpty');
+      const bankDetailsEl = document.getElementById('bankDetails');
+      
+      if (data.bankName || data.accountNumber || data.accountName || data.iban || data.swift || data.instructions) {
+        // Hide empty message
+        if (emptyEl) emptyEl.style.display = 'none';
+        
+        // Update individual fields
+        document.getElementById('bankName').textContent = data.bankName || '-';
+        document.getElementById('accountName').textContent = data.accountName || '-';
+        document.getElementById('accountNumber').textContent = data.accountNumber || '-';
+        document.getElementById('iban').textContent = data.iban || '-';
+        
+        // Show/hide SWIFT section
+        const swiftSection = document.getElementById('swiftSection');
+        const swiftEl = document.getElementById('swift');
+        if (data.swift) {
+          swiftEl.textContent = data.swift;
+          swiftSection.style.display = 'block';
+        } else {
+          swiftSection.style.display = 'none';
+        }
+        
+        // Show/hide instructions section
+        const instructionsSection = document.getElementById('instructionsSection');
+        const instructionsEl = document.getElementById('instructions');
+        if (data.instructions) {
+          instructionsEl.textContent = data.instructions;
+          instructionsSection.style.display = 'block';
+        } else {
+          instructionsSection.style.display = 'none';
+        }
+      } else {
+        // Show empty message
+        if (emptyEl) emptyEl.style.display = 'block';
+        if (bankDetailsEl) bankDetailsEl.style.display = 'none';
+      }
+    } catch (e) {
+      console.warn('Failed to fetch payment settings', e);
+    }
+  }
+</script>
+
+<!-- Related Packages Section -->
+<section class="my-5">
+  <div class="container">
+    <h2 class="mb-4"><strong>You May Also Like</strong></h2>
+    
+    <% if (relatedPackages && relatedPackages.length > 0) { %>
+      <div class="row g-4">
+        <% relatedPackages.forEach(function(package) { %>
+    <div class="col-lg-3 col-md-6 col-12">
+      <div class="tour-card">
+        <div class="tour-img">
+                <img src="<%= package.imageUrl ? (package.imageUrl.startsWith('http') ? package.imageUrl : adminBaseUrl + (package.imageUrl.startsWith('/') ? '' : '/') + package.imageUrl) : '/images/hero-img1.webp' %>" alt="<%= package.title %>">
+                <% if (package.featured) { %>
+          <div class="featured-badge">Featured</div>
+                <% } %>
+          <div class="wishlist"><i class="bi bi-heart"></i> Add to wishlist</div>
+        </div>
+        <div class="tour-body">
+                <h5><%= package.title %></h5>
+                <p class="location"><i class="bi bi-geo-alt"></i> <%= package.location || 'Pakistan\'s northern regions' %></p>
+          <div class="d-flex justify-content-between align-items-center">
+                  <a href="#" class="option-link">$<%= package.price.toLocaleString() %></a>
+                  <button class="explore-btn" onclick="window.location.href='/payment/<%= package._id %>'">Explore</button>
+          </div>
+        </div>
+      </div>
+    </div>
+        <% }); %>
+  </div>
+    <% } else { %>
+      <div class="text-center py-4">
+        <p class="text-muted">No related packages available at the moment.</p>
+</div>
+    <% } %>
+        </div>
+</section>
+
+
+
+  <!-- Footer -->
+  <%- include('partials/footer') %>
+
+  <!-- Notification Container -->
+  <div id="notificationContainer"></div>
+  
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <h5>Processing Payment...</h5>
+      <p class="text-muted">Please wait while we process your booking</p>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Override getCurrentTourData function for payment page
+  function getCurrentTourData() {
+    return {
+      id: '<%= tourPackage._id %>',
+      title: '<%= tourPackage.title %>',
+      location: '<%= tourPackage.location || "Pakistan\'s northern regions" %>',
+      price: <%= tourPackage.price %>,
+      imageUrl: '<%= tourPackage.imageUrl ? (tourPackage.imageUrl.startsWith("http") ? tourPackage.imageUrl : adminBaseUrl + (tourPackage.imageUrl.startsWith("/") ? "" : "/") + tourPackage.imageUrl) : "/images/hero-img1.webp" %>'
+    };
+  }
+  
+  // Override goToTour function for payment page
+  function goToTour(tourId) {
+    window.location.href = `/payment/${tourId}`;
+  }
+  
+  // Enhanced addToCart function with better UX
+  function addToCart() {
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const cartIcon = document.getElementById('cartIcon');
+    const cartText = document.getElementById('cartText');
+    
+    // Prevent multiple clicks
+    if (addToCartBtn.classList.contains('disabled')) {
+      return;
+    }
+    
+    // Get current page data
+    const tourData = getCurrentTourData();
+    if (!tourData) {
+      showNotification('Error: Unable to get tour information', 'error');
+      return;
+    }
+    
+    // Check if item already exists in cart
+    const existingItem = cart.find(item => item.id === tourData.id);
+    if (existingItem) {
+      showNotification('Item already in cart!', 'warning');
+      return;
+    }
+    
+    // Show adding state
+    addToCartBtn.classList.add('adding', 'disabled');
+    cartIcon.className = 'bi bi-hourglass-split me-2';
+    cartText.textContent = 'Adding...';
+    
+    // Simulate processing time for better UX
+    setTimeout(() => {
+      // Add to cart
+      cart.push(tourData);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartDisplay();
+      
+      // Show added state
+      addToCartBtn.classList.remove('adding');
+      addToCartBtn.classList.add('added');
+      cartIcon.className = 'bi bi-check-circle me-2 cart-icon-bounce';
+      cartText.textContent = 'Added to Cart!';
+      cartText.classList.add('cart-text-slide');
+      
+      // Show success notification
+      showNotification('Added to cart successfully!', 'success');
+      
+      // Reset button after 2 seconds
+      setTimeout(() => {
+        addToCartBtn.classList.remove('added', 'disabled');
+        cartIcon.className = 'bi bi-cart-plus me-2';
+        cartText.textContent = 'Add to Cart';
+        cartText.classList.remove('cart-text-slide');
+      }, 2000);
+      
+    }, 800); // 800ms delay for better UX
+  }
+</script>
+
+</body>
+</html>

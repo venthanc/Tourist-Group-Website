@@ -1,0 +1,56 @@
+  
+    .contact-section {
+      background: #fff;
+      margin-top: -100px; /* Overlap effect */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 60px 40px;
+      position: relative;
+      z-index: 2;
+      min-height: 800px; /* Increased height */
+    }
+    .help-box {
+      min-height: 370px; /* Increased Need Help box height */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .navbar-brand img {
+      width: 100px;
+      height: 100px;
+    }
+    .navbar-nav {
+      gap: 15px;
+    }
+    .dropdown-toggle::after {
+      margin-left: 25px !important;
+    }
+    .cart-btn {
+      border: none;
+    }
+    .submit-btn {
+      padding: 15px;
+      margin-top: 40px;
+      color: white;
+      background-color: rgba(3, 3, 56, 0.836);
+      border: none;
+    }
+    .submit-btn:hover {
+      background-color: transparent;
+      color: rgba(3, 3, 56, 0.836);
+      border: 1px solid black;
+    }
+    @media(max-width:768px){
+      body {
+        padding: 50px 0; /* Reduce padding on small screens */
+      }
+      .contact-section {
+        margin-top: -50px;
+        padding: 30px;
+        min-height: auto;
+      }
+      .help-box {
+        min-height: auto;
+      }
+    }
+  

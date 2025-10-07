@@ -1,0 +1,423 @@
+li{
+    font-weight: bold;
+    
+   }
+    .journey-section {
+     padding: 60px 20px;
+   }
+   .journey-card {
+     background: rgba(255, 255, 255, 0.9);
+     border-radius: 12px;
+     padding: 30px;
+    
+   }
+
+/* section 4 */
+
+
+       .stats-section {
+         
+            background-color: #1c2a3a;
+     color: white;
+     padding: 60px 0;
+     background-image: url(/images/bg-line-counter.png);
+     background-size: cover;
+     background-position: center;
+       }
+
+
+       .stat-item {
+           text-align: center;
+       }
+
+       .stat-icon-container {
+           width: 100px;
+           height: 115.47px;
+           margin: 0 auto 20px;
+           background-color: #85e7955e;
+           clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+           display: flex;
+           align-items: center;
+           justify-content: center;
+       }
+
+       .stat-icon {
+           color: #fff;
+           font-size: 3rem;
+           animation: pulse 2s infinite;
+       }
+
+       @keyframes pulse {
+           0% { transform: scale(1); }
+           50% { transform: scale(1.05); }
+           100% { transform: scale(1); }
+       }
+
+       /* Number Animation - CSS only */
+       .stat-number {
+           font-size: 3rem;
+           font-weight: 700;
+           opacity: 0;
+           transform: translateY(20px);
+           animation: slideUpAndFadeIn 1s forwards;
+       }
+
+       /* Animation delays for a cascading effect */
+       .stat-number.delay-1 { animation-delay: 0.5s; }
+       .stat-number.delay-2 { animation-delay: 1s; }
+       .stat-number.delay-3 { animation-delay: 1.5s; }
+       .stat-number.delay-4 { animation-delay: 2s; }
+
+       @keyframes slideUpAndFadeIn {
+           to {
+               opacity: 1;
+               transform: translateY(0);
+           }
+       }
+   
+
+
+  /* section 5 */
+ 
+    .accordion-item {
+     border: none; 
+      margin-bottom: 15px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+     
+   .accordion-button {
+     box-shadow: none !important;
+     background: transparent;
+     font-weight: 600;
+     border: none;
+      background-color: transparent;
+      padding: 20px 25px;
+      font-size: 16px;
+   }
+    
+   /* Remove default arrow */
+   .accordion-button::after { display: none;  }
+    .accordion-button.collapsed::before { content: "+"; margin-right:10px; font-weight:bold; font-size: 18px; }
+    .accordion-button:not(.collapsed)::before { content: "-"; margin-right:10px; font-weight:bold; font-size: 18px; }
+
+         /* ✅ No border when open */
+   .accordion-collapse.collapse.show,
+   .accordion-button:not(.collapsed) {
+       border: none;
+       background-color: transparent;
+     outline: none;
+   }
+
+   /* ❌ remove separate border on body */
+   .accordion-body {
+       border: none !important;
+       padding: 25px;
+       background-color: #f8f9fa;
+       line-height: 1.6;
+     }
+     
+     /* Hover effects and transitions */
+     .accordion-button:hover {
+       background-color: #f8f9fa !important;
+       transition: background-color 0.3s ease;
+     }
+     
+     .accordion-item:hover {
+       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+       transition: box-shadow 0.3s ease;
+     }
+     
+     /* Ensure proper accordion behavior with smooth animations */
+     .accordion-collapse {
+       overflow: hidden;
+       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+       max-height: 0;
+       opacity: 0;
+       transform: translateY(-10px);
+     }
+     
+     .accordion-collapse.show {
+       max-height: 300px; /* Increased for better content support */
+       opacity: 1;
+       transform: translateY(0);
+     }
+     
+     /* Remove any default Bootstrap borders */
+     .accordion-item,
+     .accordion-button,
+     .accordion-collapse {
+     border: none !important;
+   }
+    .section-container {
+           padding: 60px 0;
+           background-color: #f8f9fa;
+       }
+       
+       .main-title {
+           font-size: 2.5rem;
+           font-weight: 700;
+           color: #2c3e50;
+           margin-bottom: 50px;
+           line-height: 1.2;
+       }
+       
+       .feature-title {
+           font-size: 1.25rem;
+           font-weight: 600;
+           color: #2c3e50;
+           margin-bottom: 15px;
+       }
+       
+       .feature-text {
+           font-size: 1rem;
+           color: #6c757d;
+           line-height: 1.6;
+           margin-bottom: 30px;
+       }
+       
+       .trek-image {
+           width: 100%;
+           height: auto;
+           border-radius: 50%;
+           object-fit: cover;
+           max-width: 400px;
+       }
+       
+       @media (max-width: 768px) {
+           .main-title {
+               font-size: 2rem;
+               text-align: center;
+           }
+           
+           .feature-title {
+               text-align: center;
+           }
+           
+           .feature-text {
+               text-align: center;
+           }
+       }
+        .testimonial-section {
+           padding: 80px 0;
+           background-color: #ffffff;
+           position: relative;
+       }
+       
+       .section-title {
+           font-size: 3rem;
+           font-weight: 700;
+           color: #2c3e50;
+           text-align: center;
+           margin-bottom: 60px;
+       }
+       
+       #testimonialCarousel {
+           position: relative;
+           overflow: visible;
+           padding-bottom: 60px;
+       }
+       
+       .testimonial-card {
+           background-color: #ffffff;
+           border-radius: 15px;
+           padding: 40px 30px;
+           margin: 0 15px;
+           box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+           height: 280px;
+           width: 450px;
+           max-width: 100%;
+           display: flex;
+           flex-direction: column;
+           justify-content: space-between;
+       }
+       
+       .testimonial-text {
+           font-size: 1.1rem;
+           color: #6c757d;
+           line-height: 1.6;
+           margin-bottom: 30px;
+           flex-grow: 1;
+       }
+       
+       .client-info {
+           display: flex;
+           align-items: center;
+           gap: 15px;
+       }
+       
+       .client-avatar {
+           width: 60px;
+           height: 60px;
+           border-radius: 50%;
+           object-fit: cover;
+       }
+       
+       .client-details h5 {
+           font-size: 1.2rem;
+           font-weight: 600;
+           color: #2c3e50;
+           margin-bottom: 5px;
+       }
+       
+       .client-details p {
+           font-size: 0.9rem;
+           color: #6c757d;
+           margin-bottom: 0;
+       }
+       
+       .stars {
+           color: #ffc107;
+           font-size: 1.2rem;
+           margin-left: auto;
+       }
+       
+       .carousel-indicators {
+           position: absolute;
+           bottom: -40px;
+           left: 50%;
+           transform: translateX(-50%);
+           display: flex !important;
+           justify-content: center;
+           align-items: center;
+           gap: 15px;
+           z-index: 10;
+       }
+       
+       .carousel-indicators [data-bs-target] {
+           width: 15px;
+           height: 15px;
+           border-radius: 50%;
+           background-color: #87CEEB;
+           border: 2px solid #87CEEB;
+           padding: 0;
+           margin: 0;
+           opacity: 1 !important;
+           transition: all 0.3s ease;
+           cursor: pointer;
+           flex-shrink: 0;
+           display: block;
+       }
+       
+       .carousel-indicators .active {
+           background-color: #4682B4;
+           border-color: #4682B4;
+           transform: scale(1.1);
+       }
+       
+       .carousel-indicators [data-bs-target]:hover {
+           background-color: #5F9EA0;
+           border-color: #5F9EA0;
+           transform: scale(1.05);
+       }
+       
+       /* Override Bootstrap defaults and ensure perfect circles */
+       .carousel-indicators button {
+           width: 15px !important;
+           height: 15px !important;
+           border-radius: 50% !important;
+           background-color: #87CEEB !important;
+           border: 2px solid #87CEEB !important;
+           padding: 0 !important;
+           margin: 0 !important;
+           display: block !important;
+           flex-shrink: 0 !important;
+       }
+       
+       .carousel-indicators button.active {
+           background-color: #4682B4 !important;
+           border-color: #4682B4 !important;
+       }
+       
+       @media (max-width: 768px) {
+           .section-title {
+               font-size: 2.2rem;
+           }
+           
+           .testimonial-card {
+               margin: 0 10px;
+               padding:60px 40px;
+               height: auto;
+           }
+       }
+        .mission-vision-section {
+     padding: 80px 0;
+     background-color: #ffffff;
+   }
+
+   .section-title {
+     font-size: 3rem;
+     font-weight: 700;
+     color: #2c3e50;
+     text-align: center;
+     margin-bottom: 80px;
+   }
+
+   .mission-vision-card {
+     background-color: #ffffff;
+     border-radius: 20px;
+     padding: 40px;
+     text-align: center;
+     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+     height: 100%;
+     transition: transform 0.3s ease, opacity 0.3s ease;
+     opacity: 0;
+     transform: translateX(60px);
+   }
+
+   .mission-vision-card:hover {
+     transform: translateY(-5px);
+   }
+   /* Scroll-in animation */
+   .mission-vision-card.in-view{
+     opacity:1;
+     transform: translateX(0);
+     transition: transform 0.8s linear, opacity 0.8s linear;
+   }
+
+   /* ✅ Hexagon Shape for Icons */
+   .icon-container {
+     width: 100px;
+     height: 100px;
+     background-color: #a8e6cf;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     margin: 0 auto 30px;
+     clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0% 50%);
+     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+   }
+
+   .icon-container svg {
+     width: 50px;
+     height: 50px;
+     stroke: #2c3e50;
+     stroke-width: 2;
+     fill: none;
+   }
+
+   .card-title {
+     font-size: 1.5rem;
+     font-weight: 600;
+     color: #2c3e50;
+     margin-bottom: 20px;
+   }
+
+   .card-text {
+     font-size: 1rem;
+     color: #6c757d;
+     line-height: 1.7;
+   }
+
+   @media (max-width: 768px) {
+     .section-title {
+       font-size: 2.2rem;
+       margin-bottom: 50px;
+     }
+
+     .mission-vision-card {
+       margin-bottom: 30px;
+       padding: 30px;
+     }
+   }

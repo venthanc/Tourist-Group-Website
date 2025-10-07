@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us</title>
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Photo count hover effect - RED background */
+    .photo-count:hover {
+      background-color: red !important;
+      color: white !important;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    
+    /* Remove scrollbar from modal */
+    .modal.show {
+      overflow: hidden !important;
+    }
+    
+    .modal-body {
+      overflow: hidden !important;
+    }
+    
+    /* Background dull black - exactly like your screenshot */
+    .modal-backdrop.show {
+      background-color: rgba(0, 0, 0, 0.95) !important;
+    }
+    
+    /* Modal content transparent */
+    .modal-content {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      height: 100vh !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    
+    /* Modal header positioning - top right like screenshot */
+    .modal-header {
+      position: absolute !important;
+      top: 15px !important;
+      right: 15px !important;
+      z-index: 1050 !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+    }
+    
+    /* Close button styling - exactly like screenshot */
+    .btn-close {
+      filter: invert(1) !important;
+      width: 40px !important;
+      height: 40px !important;
+      background: rgba(255,255,255,0.1) !important;
+      border-radius: 50% !important;
+      opacity: 1 !important;
+      border: 1px solid rgba(255,255,255,0.3) !important;
+    
+    }
+    
+    .btn-close:hover {
+      background: rgba(255,255,255,0.2) !important;
+      
+    }
+    
+    /* Modal body - image centered like screenshot */
+    .modal-body {
+      flex: 1 !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      padding: 20px !important;
+      position: relative !important;
+    }
+    
+    /* Image styling exactly like your screenshot */
+    .modal-body img {
+      max-width: 90% !important;
+      max-height: 90% !important;
+      object-fit: contain !important;
+      border-radius: 8px !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+    }
+  </style>
+
+</head>
+<body>
+
+<!-- ✅ Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+  <div class="container-fluid px-4">
+    <!-- Logo -->
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="https://themagpietreksandtours.com/wp-content/uploads/2024/11/WhatsApp-Image-2024-11-18-at-2.53.19-AM.jpeg" alt="Logo" style="width: 60px; height: 80px;">
+    </a>
+
+    <!-- Toggle Button -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Nav Links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto gap-lg-3 text-center">
+        <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Adventure Tour</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Trophy Hunting</a></li>
+
+        <!-- Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="tourDropdown" role="button" data-bs-toggle="dropdown">
+            Tour
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Tour 1</a></li>
+            <li><a class="dropdown-item" href="#">Tour 2</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item"><a class="nav-link" href="#">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Destination</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">FAQ's</a></li>
+      </ul>
+
+      <!-- Language Dropdown -->
+      <div class="dropdown me-lg-4 mb-2 mb-lg-0">
+        <button class="btn dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
+          English
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Select Language</a></li>
+          <li><a class="dropdown-item" href="#">English</a></li>
+          <li><a class="dropdown-item" href="#">French</a></li>
+          <li><a class="dropdown-item" href="#">German</a></li>
+          <li><a class="dropdown-item" href="#">Italian</a></li>
+          <li><a class="dropdown-item" href="#">Malay</a></li>
+          <li><a class="dropdown-item" href="#">Russian</a></li>
+          <li><a class="dropdown-item" href="#">Spanish</a></li>
+          <li><a class="dropdown-item" href="#">Chinese</a></li>
+          <li><a class="dropdown-item" href="#">Arabic</a></li>
+        </ul>
+      </div>
+
+      <!-- Cart Icon -->
+      <a href="#" class="btn btn-outline-dark position-relative" style="border: none;">
+        <i class="bi bi-cart"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+          0
+        </span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ✅ Hero Section -->
+<section class="position-relative text-white text-center d-flex align-items-center justify-content-center" 
+         style="background: url('img/bgimg.jpg') center/cover no-repeat; height: 350px; margin-top: 80px;">
+
+  <!-- Overlay -->
+  <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.6);"></div>
+
+  <!-- Content -->
+  <div class="position-relative">
+    <h1 class="fw-bold">Activity – Hiking</h1>
+    <p>
+      <a href="#" class="text-white text-decoration-none">Home</a> 
+      <span class="mx-2">&gt;</span> 
+      <span>Tour <span class="mx-2">&gt;</span> Activity – Hiking</span>
+    </p>
+  </div>
+</section>
+<style>
+ @media (max-width: 768px) {
+          .destination
+        {
+            max-width: 100%;
+            width: 32rem;
+          }  
+        }
+</style>
+<div class="bar col-md-12 destination">
+  
+<div class="container  mx-auto my-4">
+  <div class="d-flex flex-wrap align-items-center justify-content-between search-box p-4 mb-5">
+    
+    <!-- Destination -->
+    <div class="search-item mb-3 mb-md-0">
+      <div class="d-flex align-items-center">
+       
+        <div>
+          <div class="d-flex">
+             <i class="bi bi-geo-alt me-2 "></i>
+          <div class="search-label">Destinations</div>
+          </div>
+          <div class="search-value">Where are you going?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity -->
+    <div class="search-item mb-3 mb-md-0">
+      <div class="d-flex align-items-center">
+       
+        <div>
+          <div class="d-flex">
+ 
+ <i class="bi bi-airplane me-2"></i>
+          <div class="search-label">Activity</div>
+          </div>
+          <div class="search-value">Hiking</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dates -->
+    <div class="search-item mb-3 mb-md-0">
+      <div class="d-flex align-items-center">
+      
+        <div>
+          <div class="d-flex">
+              <i class="bi bi-calendar3 me-2"></i>
+          <div class="search-label">Dates</div>
+          </div>
+          <div class="search-value">DD-MM-YYYY</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Guests -->
+    <div class="search-item mb-3 mb-md-0">
+      <div class="d-flex align-items-center">
+        
+        <div>
+          <div class="d-flex">
+            <i class=" bi-person me-2 fw-bold"></i>
+          <div class="search-label">Guests</div>
+          </div>
+          <div class="search-value">2 Persons</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Button -->
+     <style>
+        @media (max-width: 768px) {
+          .text-end1{
+            max-width: 100%;
+            width: 26rem;
+          }
+          
+            
+        }
+
+
+     </style>
+
+    <div class="text-end1">
+      <button  class="search-btn" style="width: 100%; "><i class="bi bi-search"></i></button>
+    </div>
+
+  </div>
+</div>
+</div>
+    <div class="container-fluid " >
+        <!-- Header Section -->
+        <div class="mb-3">
+            <!-- Advanced Search - Top Right -->
+            <div class="d-flex justify-content-end mb-3">
+                <div class="dropdown" style="margin-top: 100px;">
+                    <button  class="btn btn-light dropdown-toggle mb-5" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-search me-1"></i>Advanced Search
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <div class="row">
+                            <!-- Filter Price -->
+                            <div class="col-3">
+                                <h6 class="mb-3">Filter Price</h6>
+                                <input type="number" class="form-control form-control-sm mb-2" value="0">
+                                <input type="number" class="form-control form-control-sm mb-2" value="50000">
+                                <input type="range" class="price-range" min="0" max="50000" value="25000">
+                            </div>
+                            
+                            <!-- Review Score -->
+                            <div class="col-2">
+                                <h6 class="mb-3">Review Score</h6>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label stars">★★★★★</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label stars">★★★★</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label stars">★★★</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label stars">★★</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label stars">★</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Categories -->
+                            <div class="col-4">
+                                <h6 class="mb-3">Categories</h6>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">Trophy Hunting</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">Packages</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">Rock Climbing</label>
+                                </div>
+                                <div class="ms-3">
+                                    <div class="form-check mb-1">
+                                        <input class="form-check-input" type="checkbox">
+                                        <label class="form-check-label">Expert Climbing Routes</label>
+                                    </div>
+                                    <div class="form-check mb-1">
+                                        <input class="form-check-input" type="checkbox">
+                                        <label class="form-check-label">Advanced Climbing Routes</label>
+                                    </div>
+                                    <div class="form-check mb-1">
+                                        <input class="form-check-input" type="checkbox">
+                                        <label class="form-check-label">Intermediate Climbing Routes</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox">
+                                        <label class="form-check-label">Beginner Climbing Routes</label>
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">Hiking and Trekking</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Duration -->
+                            <div class="col-3">
+                                <h6 class="mb-3">Duration</h6>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">0-3 hours</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">3-5 hours</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">5-7 hours</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">+7 hours</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">1-3 days</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">+3 days</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Header Line -->
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="h3 fw-normal me-3">2 Tours found</span>
+                    <a href="#" class="text-primary text-decoration-none">Clear Filter</a>
+                </div>
+                <div class="d-flex align-items-center">
+                    <select class="form-select me-3" style="width: 180px; border: none; background-color: rgba(255, 255, 255, 0); font-weight:700;">
+                        <option selected> <b>Sort by Latest</b></option>
+                        <option>Latest</option>
+                        <option>Rating</option>
+                        <option>Price:low to high</option>
+                        <option>Price:high to low</option>
+                    </select>
+                    
+                    <button class="grid-btn active">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="grid-btn">
+                        <i class="fas fa-th"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tour Card -->
+        <div class="card mb-4 w-100%">
+            <div class="row g-0">
+                <div class="col-md-5">
+                    <div class="tour-image-container">
+                        <img src="img/images.jpeg" 
+                             class="tour-image" alt="Ratti Gali Lake Trek">
+                        <div class="featured-badge">Featured</div>
+                        <div class="photo-count" data-bs-toggle="modal" data-bs-target="#imageModal1">
+                            1 photo
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <div class="row h-100">
+                            <div class="col-8">
+                                <h5 class="card-title mb-2">Ratti Gali Lake Trek</h5>
+                                <p class="text-muted mb-2 small">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    Ratti Gali Lake, Azad Kashmir
+                                </p>
+                                <div class="mb-3">
+                                    <span class="stars">★★★★★</span>
+                                    <small class="text-muted ms-1">1 review</small>
+                                </div>
+                                <p class="card-text text-muted">
+                                    Ratti Gali Lake trek offers a breathtaking adventure through lush meadows and alpine scenery, ending at a stunning glacial lake nestled in the mountains.
+                                </p>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div class="mb-3">
+                                    <span class="participant-count">
+                                        <i class="fas fa-users me-1"></i>5
+                                    </span>
+                                </div>
+                                <div class="mt-auto">
+                                    <a href="#" class="option-price-btn text-decoration-none" style="border: none; background-color: transparent; color: black;"> <b>Option Price</b></a>
+                                    <br>
+                                    <button class="explore-btn">Explore</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Image Modal 1 -->
+    <div class="modal fade" id="imageModal1" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" ></button>
+                </div>
+                <div class="modal-body p-0 d-flex justify-content-center align-items-center">
+                    <img src="img/images.jpeg" 
+                         class="img-fluid w-100" alt="Ratti Gali Lake Trek">
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <div class="container-fluid mt-4">
+      
+        <!-- Tour Card 2 -->
+        <div class="card mb-4 w-100">
+            <div class="row g-0">
+                <div class="col-md-5">
+                    <div class="tour-image-container">
+                        <img src="img/skardu.webp " 
+                             class="tour-image" alt="Shounter Lake Trek">
+                        <div class="featured-badge">Featured</div>
+                        <div class="photo-count" data-bs-toggle="modal" data-bs-target="#imageModal2">
+                            1 photo
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <div class="row h-100">
+                            <div class="col-8">
+                                <h5 class="card-title mb-2">Shounter Lake Trek (7-9)days</h5>
+                                <p class="text-muted mb-2 small">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    
+                                    Neelum Valley, Azad Kashmir
+                                </p>
+                                <div class="mb-3">
+                                    <span class="stars">★★★★★</span>
+                                    <small class="text-muted ms-1">1 review</small>
+                                </div>
+                                <p class="card-text text-muted">
+                                   The Shounter Lake trek takes you through enchanting landscapes to a pristine alpine lake, offering breathtaking views and a peaceful escape in the heart of Azad Kashmir.
+                                </p>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div class="mb-3">
+                                    <span class="participant-count">
+                                        <i class="fas fa-users me-1"></i>55
+                                    </span>
+                                </div>
+                                <div class="mt-auto">
+                                   <a href="#" class="option-price-btn text-decoration-none" style="border: none; background-color: transparent; color: black; "> <b>Option Price</b></a>
+                                    <br>
+                                    <button class="explore-btn">Explore</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Image Modal 2 -->
+    <div class="modal fade" id="imageModal2" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0 d-flex justify-content-center align-items-center">
+                    <img src="img/skardu.webp" 
+                         class="img-fluid w-100" alt="Shounter Lake Trek">
+                </div>
+            </div>
+        </div>
+    </div>
+  
+  
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const gridButtons = document.querySelectorAll('.grid-btn');
+            gridButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    gridButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+
+  <!-- Footer Section -->
+<footer class="text-light" style="background-color:#141842; margin-top: 200px;">
+  <div class="container">
+    <div class="row gy-4">
+      
+      <!-- Logo & Description -->
+      <div class="col-md-3">
+        <img style="width: 60px;" src="https://themagpietreksandtours.com/wp-content/uploads/2024/11/WhatsApp-Image-2024-11-18-at-2.53.19-AM.jpeg" alt="Logo" class="mb-3">
+        <p>
+          Explore Pakistan's natural beauty and rich culture. Embark on unforgettable journeys through its majestic landscapes and vibrant valleys
+        </p>
+        <div>
+          <a href="#" class="text-light me-3"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-light me-3"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-pinterest"></i></a>
+        </div>
+      </div>
+      
+      <!-- Support Links -->
+      <div class="col-md-3">
+        <h6 class="fw-bold mb-3">Support</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-light text-decoration-none">Home</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Destinations</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Tour</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Gallery</a></li>
+          <li><a href="#" class="text-light text-decoration-none">FAQ</a></li>
+          <li><a href="#" class="text-light text-decoration-none">About Us</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Contact Us</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Privacy & Policy</a></li>
+        </ul>
+      </div>
+
+      <!-- About Us -->
+      <div class="col-md-3">
+        <h6 class="fw-bold mb-3">About Us</h6>
+      
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-light text-decoration-none">Our Story</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Travel Blog & Tips</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Working With Us</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Be Our Partner</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-md-3">
+        <h6 class="fw-bold mb-3">Contact Info</h6>
+        <p><i class="bi bi-geo-alt-fill me-2 text-danger"></i> Shahrah e Quaid, Azam Jutial, Gilgit-Baltistan, Pakistan.</p>
+        <p><i class="bi bi-telephone-fill me-2 text-danger"></i> 0355 4692674 <br> 0355 5444102</p>
+        <p><i class="bi bi-envelope-fill me-2 text-danger"></i> booking@themagpietreksandtours.com</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-top mt-4 pt-3 pb-2" style="border-color:rgba(255,255,255,0.2)!important;">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <p style="text-align: center; padding-left: 150px;" class="mb-0 small">© 2024 Tourism. All Rights Reserved. Design & Developed By <span class="fw-bold text-warning">MAQSONS TECHNOLOGY</span></p>
+      <div class="d-flex align-items-center mt-2 mt-md-0">
+        <span class="me-3">USD $</span>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" width="40" class="me-2" alt="Visa">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" width="40" class="me-2" alt="Mastercard">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5a/UnionPay_logo.svg" width="40" class="me-2" alt="UnionPay">
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

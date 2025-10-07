@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= trail.title %> - The Magpie Trek And Tours</title>
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/hiking.css">
+  <link rel="stylesheet" href="/styles/home.css">
+
+</head>
+<body>
+
+    <%- include('partials/navbar', { user: user, isAuthenticated: isAuthenticated, currentPage: 'hiking' }) %>
+    <%- include('partials/language-script') %>
+<section class="position-relative text-white text-center d-flex align-items-center justify-content-center " 
+         style="background: url('/images/about-header.jpg') center/cover no-repeat; height: 350px; margin-top: 80px;">
+
+  <!-- Overlay -->
+  <div class="position-absolute top-0 start-0 w-100 h-100" 
+       style="background-color: rgba(0,0,0,0.6);"></div>
+
+  <!-- Content -->
+  <div class="position-relative">
+    <h1 class="fw-bold">Activity</h1>
+    <p>
+      <a href="#" class="text-white text-decoration-none">Home </a> 
+      <span class="mx-2">&gt;</span> 
+      <span>Tour   <span class="mx-2">&gt;</span>  Activity</span>
+    </p>
+    
+  </div>
+</section>
+<div class="bar col-md-12">
+  <div class="container mx-auto my-4">
+    <div class="search-main">
+      <!-- Search Bar -->
+      <form class="search-bar" action="/hiking" method="GET" id="hikingSearchForm">
+        <div class="search-form">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-12">
+              <div class="search-field">
+                <span class="icon">
+                  <svg viewBox="0 0 24 24"><path d="M12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9 4.03 9 9 9z" fill="none" stroke-width="1.6"/><path d="M20 20l3 3" stroke-width="1.6"/></svg>
+                </span>
+                <div class="field-text">
+                  <div class="label">Destinations</div>
+                  <div class="destination-select">
+                    <div class="custom-select" id="destination-select">
+                      <div class="select-trigger" id="select-trigger">
+                        <span class="select-value"><%= searchParams.location || 'Select Destination' %></span>
+                        <svg class="select-arrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
+                      </div>
+                      <input type="hidden" name="location" id="locationInput" value="<%= searchParams.location || '' %>">
+                      <div class="select-dropdown" id="select-dropdown">
+                        <div class="search-container">
+                          <input type="text" class="dropdown-search" placeholder="Search destinations..." id="dropdown-search">
+                        </div>
+                        <div class="options-list" id="options-list">
+                          <div class="option" data-value="hunza" data-search="hunza valley">Hunza Valley</div>
+                          <div class="option" data-value="skardu" data-search="skardu">Skardu</div>
+                          <div class="option" data-value="gilgit" data-search="gilgit">Gilgit</div>
+                          <div class="option" data-value="astore" data-search="astore valley">Astore Valley</div>
+                          <div class="option" data-value="ghizer" data-search="ghizer valley">Ghizer Valley</div>
+                          <div class="option" data-value="nagar" data-search="nagar valley">Nagar Valley</div>
+                          <div class="option" data-value="diamer" data-search="diamer">Diamer</div>
+                          <div class="option" data-value="gupis" data-search="gupis">Gupis</div>
+                          <div class="option" data-value="shigar" data-search="shigar valley">Shigar Valley</div>
+                          <div class="option" data-value="khaplu" data-search="khaplu valley">Khaplu Valley</div>
+                          <div class="option" data-value="rongdu" data-search="rongdu valley">Rongdu Valley</div>
+                          <div class="option" data-value="kharmang" data-search="kharmang">Kharmang</div>
+                          <div class="option" data-value="gultari" data-search="gultari">Gultari</div>
+                          <div class="option" data-value="deosai" data-search="deosai plains">Deosai Plains</div>
+                          <div class="option" data-value="k2" data-search="k2 base camp">K2 Base Camp</div>
+                          <div class="option" data-value="concordia" data-search="concordia">Concordia</div>
+                          <div class="option" data-value="baltoro" data-search="baltoro glacier">Baltoro Glacier</div>
+                          <div class="option" data-value="batura" data-search="batura glacier">Batura Glacier</div>
+                          <div class="option" data-value="passu" data-search="passu cones">Passu Cones</div>
+                          <div class="option" data-value="attabad" data-search="attabad lake">Attabad Lake</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12">
+              <div class="search-field">
+                <span class="icon">
+                  <svg viewBox="0 0 24 24"><path d="M4 20l8-16 8 16" fill="none" stroke-width="1.6"/></svg>
+                </span>
+                <div class="field-text">
+                  <div class="label">Activity</div>
+                  <select class="input activity-dropdown" name="activity">
+                    <option value="">All Activity</option>
+                    <option value="hiking" <%= searchParams.activity === 'hiking' ? 'selected' : '' %>>Hiking</option>
+                    <option value="trekking" <%= searchParams.activity === 'trekking' ? 'selected' : '' %>>Trekking</option>
+                    <option value="photography" <%= searchParams.activity === 'photography' ? 'selected' : '' %>>Photography</option>
+                    <option value="trophy hunting" <%= searchParams.activity === 'trophy hunting' ? 'selected' : '' %>>Trophy Hunting</option>
+                    <option value="camping" <%= searchParams.activity === 'camping' ? 'selected' : '' %>>Camping</option>
+                    <option value="cultural" <%= searchParams.activity === 'cultural' ? 'selected' : '' %>>Cultural</option>
+                    <option value="sports" <%= searchParams.activity === 'sports' ? 'selected' : '' %>>Sports</option>
+                    <option value="adventure sports" <%= searchParams.activity === 'adventure sports' ? 'selected' : '' %>>Adventure Sports</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12">
+              <div class="search-field">
+                <span class="icon">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3" ry="3" fill="none" stroke-width="1.6"/><path d="M3 10h18M8 4v4M16 4v4" stroke-width="1.6"/></svg>
+                </span>
+                <div class="field-text">
+                  <div class="label">Dates</div>
+                  <input type="date" class="input date-input" id="start-date" name="startDate" value="<%= searchParams.startDate || '' %>" />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6 col-12">
+              <div class="search-field">
+                <span class="icon">
+                  <svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 116 0 3 3 0 01-6 0zM3 20a7 7 0 0118 0" fill="none" stroke-width="1.6"/></svg>
+                </span>
+                <div class="field-text">
+                  <div class="label">Guests</div>
+                  <select class="input guest-dropdown" name="guests">
+                    <option value="1" <%= searchParams.guests === '1' ? 'selected' : '' %>>1 Person</option>
+                    <option value="2" <%= searchParams.guests === '2' || !searchParams.guests ? 'selected' : '' %>>2 Persons</option>
+                    <option value="3" <%= searchParams.guests === '3' ? 'selected' : '' %>>3 Persons</option>
+                    <option value="4" <%= searchParams.guests === '4' ? 'selected' : '' %>>4 Persons</option>
+                    <option value="5" <%= searchParams.guests === '5' ? 'selected' : '' %>>5 Persons</option>
+                    <option value="6" <%= searchParams.guests === '6' ? 'selected' : '' %>>6 Persons</option>
+                    <option value="7" <%= searchParams.guests === '7' ? 'selected' : '' %>>7 Persons</option>
+                    <option value="8" <%= searchParams.guests === '8' ? 'selected' : '' %>>8 Persons</option>
+                    <option value="9" <%= searchParams.guests === '9' ? 'selected' : '' %>>9 Persons</option>
+                    <option value="10" <%= searchParams.guests === '10' ? 'selected' : '' %>>10+ Persons</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-1 col-md-6 col-12" style="display: flex;align-items: center;">
+              <button type="submit" class="search-btn w-100" aria-label="Search">
+                <svg viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" fill="none" stroke-width="2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+    <div class="container-fluid " >
+        <!-- Header Section -->
+        <div class="mb-3">
+            <!-- Advanced Search - Top Right -->
+            <div class="d-flex justify-content-end mb-3">
+                <div class="dropdown" style="margin-top: 100px;">
+                    <button  class="btn btn-light dropdown-toggle mb-5" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-search me-1"></i>Advanced Search
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <div class="row">
+                            <!-- Filter Price -->
+                            <div class="col-3">
+                                <h6 class="mb-3">Filter Price</h6>
+                                <input type="number" class="form-control form-control-sm mb-2" value="0">
+                                <input type="number" class="form-control form-control-sm mb-2" value="50000">
+                                <input type="range" class="price-range" min="0" max="50000" value="25000">
+                            </div>
+                            
+                            <!-- Review Score -->
+                            <div class="col-2">
+                                <h6 class="mb-3">Review Score</h6>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label stars">★★★★★</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label stars">★★★★</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label stars">★★★</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label stars">★★</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label stars">★</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Categories -->
+                            <div class="col-4">
+                                <h6 class="mb-3">Categories</h6>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">Trophy Hunting</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">Packages</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">Rock Climbing</label>
+                                </div>
+                                <div class="ms-3">
+                                    <div class="form-check mb-1">
+                                        <input class="form-check-input" type="checkbox">
+                                        <label class="form-check-label">Expert Climbing Routes</label>
+                                    </div>
+                                    <div class="form-check mb-1">
+                                        <input class="form-check-input" type="checkbox">
+                                        <label class="form-check-label">Advanced Climbing Routes</label>
+                                    </div>
+                                    <div class="form-check mb-1">
+                                        <input class="form-check-input" type="checkbox">
+                                        <label class="form-check-label">Intermediate Climbing Routes</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox">
+                                        <label class="form-check-label">Beginner Climbing Routes</label>
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">Hiking and Trekking</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Duration -->
+                            <div class="col-3">
+                                <h6 class="mb-3">Duration</h6>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">0-3 hours</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">3-5 hours</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">5-7 hours</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">+7 hours</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">1-3 days</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">+3 days</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search Results Header -->
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <% if (searchParams.location || searchParams.activity) { %>
+                        <span class="h3 fw-normal me-3"><%= hikingTrails.length %> Tours found</span>
+                        <span class="text-muted">for 
+                            <% if (searchParams.location) { %>
+                                <strong><%= searchParams.location %></strong>
+                                <% if (searchParams.activity) { %> • <% } %>
+                            <% } %>
+                            <% if (searchParams.activity) { %>
+                                <strong><%= searchParams.activity.charAt(0).toUpperCase() + searchParams.activity.slice(1) %></strong>
+                            <% } %>
+                        </span>
+                        <a href="/hiking" class="text-primary text-decoration-none ms-2">Clear Filter</a>
+                    <% } else { %>
+                        <span class="h3 fw-normal me-3"><%= hikingTrails.length %> Tours found</span>
+                    <% } %>
+                </div>
+                <div class="d-flex align-items-center">
+                    <select class="form-select me-3" style="width: 180px; border: none; background-color: rgba(255, 255, 255, 0); font-weight:700;">
+                        <option selected> <b>Sort by Latest</b></option>
+                        <option>Latest</option>
+                        <option>Rating</option>
+                        <option>Price:low to high</option>
+                        <option>Price:high to low</option>
+                    </select>
+                    
+                    <button class="grid-btn active">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="grid-btn">
+                        <i class="fas fa-th"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Tour Cards -->
+        <% if (hikingTrails && hikingTrails.length > 0) { %>
+            <% hikingTrails.forEach(function(trail, index) { %>
+                <div class="card mb-4 w-100">
+            <div class="row g-0">
+                <div class="col-md-5">
+                    <div class="tour-image-container">
+                                <% 
+                                  // Resolve hiking trail image similar to slider logic
+                                  const rawImg = (trail.imageUrl || '').trim();
+                                  const baseAdmin = adminBaseUrl;
+                                  let resolvedTrailImg = '/images/hero-img1.webp';
+                                  if (rawImg) {
+                                    if (rawImg.startsWith('http') || rawImg.startsWith('data:')) {
+                                      resolvedTrailImg = rawImg;
+                                    } else if (rawImg.startsWith('/')) {
+                                      resolvedTrailImg = baseAdmin.replace(/\/$/, '') + rawImg;
+                                    } else {
+                                      resolvedTrailImg = baseAdmin.replace(/\/$/, '') + '/' + rawImg;
+                                    }
+                                  }
+                                %>
+                                <img 
+                                  src="<%= resolvedTrailImg %>"
+                                  alt="<%= trail.title %>"
+                                  class="tour-image"
+                                  data-title="<%= trail.title %>"
+                                  data-raw="<%= trail.imageUrl || '' %>"
+                                  data-admin-base="<%= adminBaseUrl %>"
+                                  onload="console.log('[hiking] image loaded:', this.dataset.title, this.src)"
+                                  onerror="(function(img){
+                                    try {
+                                      const raw = (img.dataset.raw || '').trim();
+                                      const base = (img.dataset.adminBase || '').replace(/\/$/, '');
+                                      const attempts = [];
+                                      if (raw) {
+                                        if (img.src.startsWith(base) && (raw.startsWith('/') || !raw.startsWith('http'))) {
+                                          attempts.push(raw);
+                                        }
+                                        if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\\d+)?/i.test(raw)) {
+                                          attempts.push(raw.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\\d+)?/i, base));
+                                        }
+                                        if (!raw.startsWith('http')) {
+                                          attempts.push(base + (raw.startsWith('/') ? '' : '/') + raw);
+                                        }
+                                      }
+                                      attempts.push('/images/hero-img1.webp');
+                                      console.warn('[hiking] image failed:', img.dataset.title, { src: img.src, raw, base, attempts });
+                                      // Try next attempt
+                                      const next = attempts.shift();
+                                      if (next && next !== img.src) {
+                                        img.onerror = null; // avoid loops
+                                        img.src = next;
+                                      }
+                                    } catch (e) { console.error('[hiking] image onerror handler failed:', e); }
+                                  })(this)"
+                                >
+                                <% if (trail.featured) { %>
+                        <div class="featured-badge">Featured</div>
+                                <% } %>
+                                <div class="photo-count" data-bs-toggle="modal" data-bs-target="#imageModal<%= index %>">
+                                    <%= trail.gallery && trail.gallery.length > 0 ? trail.gallery.length + 1 : 1 %> photo<%= trail.gallery && trail.gallery.length > 0 ? 's' : '' %>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <div class="row h-100">
+                            <div class="col-8">
+                                        <h5 class="card-title mb-2"><%= trail.title %></h5>
+                                <p class="text-muted mb-2 small">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                            <%= trail.location %>
+                                </p>
+                                <div class="mb-3">
+                                            <span class="stars">
+                                                <% for (let i = 1; i <= 5; i++) { %>
+                                                    <% if (i <= trail.stars) { %>★<% } else { %>☆<% } %>
+                                                <% } %>
+                                            </span>
+                                            <small class="text-muted ms-1"><%= trail.reviews %> review<%= trail.reviews !== 1 ? 's' : '' %></small>
+                                </div>
+                                <p class="card-text text-muted">
+                                            <%= trail.description.length > 150 ? trail.description.substring(0, 150) + '...' : trail.description %>
+                                        </p>
+                                        <div class="mt-2 d-flex gap-2">
+                                            <% if (trail.difficulty) { %>
+                                                <span class="badge bg-<%= trail.difficulty === 'easy' ? 'success' : trail.difficulty === 'moderate' ? 'warning' : 'danger' %>">
+                                                    <%= trail.difficulty.charAt(0).toUpperCase() + trail.difficulty.slice(1) %>
+                                                </span>
+                                            <% } %>
+                                            <% if (trail.activity) { %>
+                                                <span class="badge bg-info">
+                                                    <%= trail.activity.charAt(0).toUpperCase() + trail.activity.slice(1) %>
+                                                </span>
+                                            <% } %>
+                                        </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                        <div class="mb-3 d-flex justify-content-between">
+                                    <span class="participant-count">
+                                                <i class="fas fa-clock me-1"></i><%= trail.duration || 'N/A' %>
+                                    </span>
+                                            <span class="fw-bold">$<%= typeof trail.price === 'number' ? trail.price.toLocaleString() : (trail.price || '0') %></span>
+                                </div>
+                                <div class="mt-auto">
+                                            <a href="#" class="option-price-btn text-decoration-none" style="border: none; background-color: transparent; color: black;">
+                                                <b>Option Price</b>
+                                            </a>
+                                    <br>
+                                            <button class="explore-btn" onclick="window.location.href='/payment/<%= trail._id %>'">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                <!-- Image Modal for each trail -->
+                <div class="modal fade" id="imageModal<%= index %>" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                                <h5 class="modal-title"><%= trail.title %> - Gallery</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                                <img 
+                                  src="<%= resolvedTrailImg %>"
+                                  class="img-fluid"
+                                  alt="<%= trail.title %>"
+                                  data-title="<%= trail.title %>"
+                                  data-raw="<%= trail.imageUrl || '' %>"
+                                  data-admin-base="<%= adminBaseUrl %>"
+                                  onload="console.log('[hiking-modal] image loaded:', this.dataset.title, this.src)"
+                                  onerror="(function(img){
+                                    try {
+                                      const raw = (img.dataset.raw || '').trim();
+                                      const base = (img.dataset.adminBase || '').replace(/\/$/, '');
+                                      const attempts = [];
+                                      if (raw) {
+                                        if (img.src.startsWith(base) && (raw.startsWith('/') || !raw.startsWith('http'))) {
+                                          attempts.push(raw);
+                                        }
+                                        if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\\d+)?/i.test(raw)) {
+                                          attempts.push(raw.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\\d+)?/i, base));
+                                        }
+                                        if (!raw.startsWith('http')) {
+                                          attempts.push(base + (raw.startsWith('/') ? '' : '/') + raw);
+                                        }
+                                      }
+                                      attempts.push('/images/hero-img1.webp');
+                                      console.warn('[hiking-modal] image failed:', img.dataset.title, { src: img.src, raw, base, attempts });
+                                      const next = attempts.shift();
+                                      if (next && next !== img.src) {
+                                        img.onerror = null;
+                                        img.src = next;
+                                      }
+                                    } catch (e) { console.error('[hiking-modal] image onerror handler failed:', e); }
+                                  })(this)"
+                                >
+                                <% if (trail.gallery && trail.gallery.length > 0) { %>
+                                    <div class="row mt-3">
+                                        <% trail.gallery.forEach(function(galleryImage) { %>
+                                            <div class="col-md-4 mb-2">
+                                                <% 
+                                                  const rawGal = (galleryImage.url || '').trim();
+                                                  let resolvedGalImg = '/images/hero-img1.webp';
+                                                  if (rawGal) {
+                                                    if (rawGal.startsWith('http') || rawGal.startsWith('data:')) {
+                                                      resolvedGalImg = rawGal;
+                                                    } else if (rawGal.startsWith('/')) {
+                                                      resolvedGalImg = adminBaseUrl.replace(/\/$/, '') + rawGal;
+                                                    } else {
+                                                      resolvedGalImg = adminBaseUrl.replace(/\/$/, '') + '/' + rawGal;
+                                                    }
+                                                  }
+                                                %>
+                                                <img 
+                                                  src="<%= resolvedGalImg %>"
+                                                  class="img-fluid"
+                                                  alt="<%= galleryImage.alt || trail.title %>"
+                                                  data-title="<%= trail.title %> (gallery)"
+                                                  data-raw="<%= rawGal %>"
+                                                  data-admin-base="<%= adminBaseUrl %>"
+                                                  onload="console.log('[hiking-gallery] image loaded:', this.dataset.title, this.src)"
+                                                  onerror="(function(img){
+                                                    try {
+                                                      const raw = (img.dataset.raw || '').trim();
+                                                      const base = (img.dataset.adminBase || '').replace(/\/$/, '');
+                                                      const attempts = [];
+                                                      if (raw) {
+                                                        if (img.src.startsWith(base) && (raw.startsWith('/') || !raw.startsWith('http'))) {
+                                                          attempts.push(raw);
+                                                        }
+                                                        if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\\d+)?/i.test(raw)) {
+                                                          attempts.push(raw.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\\d+)?/i, base));
+                                                        }
+                                                        if (!raw.startsWith('http')) {
+                                                          attempts.push(base + (raw.startsWith('/') ? '' : '/') + raw);
+                                                        }
+                                                      }
+                                                      attempts.push('/images/hero-img1.webp');
+                                                      console.warn('[hiking-gallery] image failed:', img.dataset.title, { src: img.src, raw, base, attempts });
+                                                      const next = attempts.shift();
+                                                      if (next && next !== img.src) {
+                                                        img.onerror = null;
+                                                        img.src = next;
+                                                      }
+                                                    } catch (e) { console.error('[hiking-gallery] image onerror handler failed:', e); }
+                                                  })(this)"
+                                                >
+                </div>
+                                        <% }); %>
+            </div>
+                                <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            <% }); %>
+        <% } else { %>
+            <div class="card mb-4 w-100">
+                <div class="card-body text-center py-5">
+                    <h5 class="card-title">No Hiking Trails Available</h5>
+                    <p class="text-muted">Check back later for exciting hiking adventures!</p>
+                </div>
+            </div>
+        <% } %>
+  
+  
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const gridButtons = document.querySelectorAll('.grid-btn');
+            gridButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    gridButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Destination Dropdown Functionality
+            const selectTrigger = document.getElementById('select-trigger');
+            const selectDropdown = document.getElementById('select-dropdown');
+            const selectValue = document.querySelector('.select-value');
+            const dropdownSearch = document.getElementById('dropdown-search');
+            const optionsList = document.getElementById('options-list');
+            const options = document.querySelectorAll('.option');
+
+            // Toggle dropdown
+            selectTrigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                selectDropdown.classList.toggle('show');
+                selectTrigger.classList.toggle('active');
+                if (selectDropdown.classList.contains('show')) {
+                    dropdownSearch.focus();
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!selectTrigger.contains(e.target) && !selectDropdown.contains(e.target)) {
+                    selectDropdown.classList.remove('show');
+                    selectTrigger.classList.remove('active');
+                }
+            });
+
+            // Search functionality
+            dropdownSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                options.forEach(option => {
+                    const text = option.textContent.toLowerCase();
+                    const searchData = option.getAttribute('data-search').toLowerCase();
+                    if (text.includes(searchTerm) || searchData.includes(searchTerm)) {
+                        option.classList.remove('hidden');
+                    } else {
+                        option.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Option selection
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const value = this.getAttribute('data-value');
+                    const text = this.textContent;
+                    selectValue.textContent = text;
+                    selectDropdown.classList.remove('show');
+                    selectTrigger.classList.remove('active');
+                    dropdownSearch.value = '';
+                    
+                    // Show all options again
+                    options.forEach(opt => opt.classList.remove('hidden'));
+                });
+            });
+
+            // Test Add to Cart Function
+            window.testAddToCart = function() {
+                alert('Add to Cart functionality would be implemented here!');
+            };
+
+            // Explore Trail handled inline on button (navigates to /payment/:id)
+        });
+    </script>
+
+  <!-- Footer Section -->
+<footer class="text-light" style="background-color:#141842; margin-top: 200px;">
+  <div class="container">
+    <div class="row gy-4">
+      
+      <!-- Logo & Description -->
+      <div class="col-md-3">
+        <img style="width: 60px;" src="https://themagpietreksandtours.com/wp-content/uploads/2024/11/WhatsApp-Image-2024-11-18-at-2.53.19-AM.jpeg" alt="Logo" class="mb-3">
+        <p>
+          Explore Pakistan’s natural beauty and rich culture. Embark on unforgettable journeys through its majestic landscapes and vibrant valleys
+        </p>
+        <div>
+          <a href="#" class="text-light me-3"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-light me-3"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-pinterest"></i></a>
+        </div>
+      </div>
+      
+      <!-- Support Links -->
+      <div class="col-md-3">
+        <h6 class="fw-bold mb-3">Support</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-light text-decoration-none">Home</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Destinations</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Tour</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Gallery</a></li>
+          <li><a href="#" class="text-light text-decoration-none">FAQ</a></li>
+          <li><a href="#" class="text-light text-decoration-none">About Us</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Contact Us</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Privacy & Policy</a></li>
+        </ul>
+      </div>
+
+      <!-- About Us -->
+      <div class="col-md-3">
+        <h6 class="fw-bold mb-3">About Us</h6>
+      
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-light text-decoration-none">Our Story</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Travel Blog & Tips</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Working With Us</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Be Our Partner</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-md-3">
+        <h6 class="fw-bold mb-3">Contact Info</h6>
+        <p><i class="bi bi-geo-alt-fill me-2 text-danger"></i> Shahrah e Quaid, Azam Jutial, Gilgit-Baltistan, Pakistan.</p>
+        <p><i class="bi bi-telephone-fill me-2 text-danger"></i> 0355 4692674 <br> 0355 5444102</p>
+        <p><i class="bi bi-envelope-fill me-2 text-danger"></i> booking@themagpietreksandtours.com</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-top mt-4 pt-3 pb-2" style="border-color:rgba(255,255,255,0.2)!important;">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <p style="text-align: center; padding-left: 150px;" class="mb-0 small">© 2024 Tourism. All Rights Reserved. Design & Developed By <span class="fw-bold text-warning">MAQSONS TECHNOLOGY</span></p>
+      <div class="d-flex align-items-center mt-2 mt-md-0">
+        <span class="me-3">USD $</span>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" width="40" class="me-2" alt="Visa">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" width="40" class="me-2" alt="Mastercard">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5a/UnionPay_logo.svg" width="40" class="me-2" alt="UnionPay">
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+  /* Custom dropdown styles for hiking page */
+  .custom-select {
+    position: relative;
+    width: 100%;
+  }
+  
+  .select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .select-trigger:hover {
+    border-color: #007bff;
+  }
+  
+  .select-trigger.active {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+  
+  .select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    display: none;
+    max-height: 300px;
+    overflow-y: auto;
+    min-height: 100px;
+  }
+  
+  .select-dropdown.show {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  .search-container {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .dropdown-search {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+  }
+  
+  .options-list {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .option {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .option:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .option.hidden {
+    display: none;
+  }
+  
+  .select-arrow {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+  
+  .select-trigger.active .select-arrow {
+    transform: rotate(180deg);
+  }
+</style>
+
+<script>
+  // Custom dropdown functionality for hiking page
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔧 Initializing hiking page dropdown...');
+    console.log('Document ready state:', document.readyState);
+    console.log('Window loaded:', window.performance.timing.loadEventEnd);
+    
+    // Wait a bit to ensure all elements are loaded
+    setTimeout(function() {
+      console.log('🔍 Starting dropdown initialization after delay...');
+      
+      const selectTrigger = document.getElementById('select-trigger');
+      const selectDropdown = document.getElementById('select-dropdown');
+      const dropdownSearch = document.getElementById('dropdown-search');
+      const optionsList = document.getElementById('options-list');
+      const selectValue = document.querySelector('.select-value');
+      
+      console.log('🔍 Element Detection:');
+      console.log('- selectTrigger:', selectTrigger);
+      console.log('- selectDropdown:', selectDropdown);
+      console.log('- dropdownSearch:', dropdownSearch);
+      console.log('- optionsList:', optionsList);
+      console.log('- selectValue:', selectValue);
+      
+      if (!selectTrigger) {
+        console.error('❌ selectTrigger not found!');
+        return;
+      }
+      if (!selectDropdown) {
+        console.error('❌ selectDropdown not found!');
+        return;
+      }
+      if (!optionsList) {
+        console.error('❌ optionsList not found!');
+        return;
+      }
+      
+      const options = optionsList.querySelectorAll('.option');
+      console.log('📋 Options found:', options.length);
+      console.log('Options list:', Array.from(options).map(opt => opt.textContent));
+      
+      console.log('🎨 Initial CSS states:');
+      console.log('- selectTrigger classes:', selectTrigger.className);
+      console.log('- selectDropdown classes:', selectDropdown.className);
+      console.log('- selectDropdown style.display:', selectDropdown.style.display);
+      console.log('- selectDropdown computed display:', window.getComputedStyle(selectDropdown).display);
+      
+      // Set initial state - ensure it's properly closed
+      selectTrigger.classList.remove('active');
+      selectDropdown.classList.remove('show');
+      selectDropdown.style.setProperty('display', 'none', 'important');
+      selectDropdown.style.setProperty('visibility', 'hidden', 'important');
+      selectDropdown.style.setProperty('opacity', '0', 'important');
+      
+      // Force a clean state
+      selectTrigger.setAttribute('aria-expanded', 'false');
+      selectTrigger.setAttribute('data-state', 'closed');
+      
+      console.log('🔧 Set initial state - dropdown hidden, trigger inactive');
+      console.log('Initial state check:');
+      console.log('- Trigger classes:', selectTrigger.className);
+      console.log('- Dropdown classes:', selectDropdown.className);
+      console.log('- Dropdown style:', selectDropdown.style.display);
+      console.log('- Is active?', selectTrigger.classList.contains('active'));
+    
+      // Reset function to ensure clean state
+      function resetDropdown() {
+        console.log('🔄 Resetting dropdown to closed state...');
+        selectTrigger.classList.remove('active');
+        selectDropdown.classList.remove('show');
+        selectDropdown.style.setProperty('display', 'none', 'important');
+        selectDropdown.style.setProperty('visibility', 'hidden', 'important');
+        selectDropdown.style.setProperty('opacity', '0', 'important');
+        selectTrigger.setAttribute('aria-expanded', 'false');
+        selectTrigger.setAttribute('data-state', 'closed');
+        console.log('Reset complete - should be closed now');
+      }
+      
+      // Toggle dropdown
+      selectTrigger.addEventListener('click', function(e) {
+        console.log('🔍 Dropdown trigger clicked');
+        console.log('Event details:', e);
+        console.log('Target:', e.target);
+        console.log('Current target:', e.currentTarget);
+        e.stopPropagation();
+        
+        // Check if dropdown is actually visible (not just has classes)
+        const isActuallyVisible = selectDropdown.style.display === 'block' || 
+                                 window.getComputedStyle(selectDropdown).display === 'block';
+        const hasActiveClass = selectTrigger.classList.contains('active');
+        
+        console.log('State analysis:');
+        console.log('- Has active class:', hasActiveClass);
+        console.log('- Is actually visible:', isActuallyVisible);
+        console.log('- Dropdown style:', selectDropdown.style.display);
+        console.log('- Dropdown computed style:', window.getComputedStyle(selectDropdown).display);
+        
+        // If it's actually visible, close it; otherwise open it
+        if (isActuallyVisible) {
+          console.log('🔄 Closing dropdown (actually visible)...');
+          closeDropdown();
+        } else {
+          console.log('🔄 Opening dropdown (not visible)...');
+          openDropdown();
+        }
+        
+        console.log('After toggle:');
+        console.log('- Trigger classes after:', selectTrigger.className);
+        console.log('- Dropdown classes after:', selectDropdown.className);
+        console.log('- Dropdown style after:', selectDropdown.style.display);
+        console.log('- Dropdown computed style after:', window.getComputedStyle(selectDropdown).display);
+      });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!selectTrigger.contains(e.target) && !selectDropdown.contains(e.target)) {
+        closeDropdown();
+      }
+    });
+    
+    // Handle option selection
+    options.forEach((option, index) => {
+      option.addEventListener('click', function() {
+        console.log(`🎯 Option ${index + 1} clicked:`, this.textContent);
+        const value = this.getAttribute('data-value');
+        const text = this.textContent;
+        
+        selectValue.textContent = text;
+        selectTrigger.setAttribute('data-value', value);
+        
+        // Update hidden input field for form submission
+        const locationInput = document.getElementById('locationInput');
+        locationInput.value = text;
+        console.log('Location input updated:', locationInput.value);
+        
+        closeDropdown();
+        
+        // Clear search
+        dropdownSearch.value = '';
+        showAllOptions();
+      });
+    });
+    
+    // Handle search functionality
+    dropdownSearch.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase().trim();
+      filterOptions(searchTerm);
+    });
+    
+    // Prevent dropdown from closing when clicking on search input
+    dropdownSearch.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+    
+      // Functions
+      function openDropdown() {
+        console.log('🔓 Opening dropdown...');
+        console.log('Before opening:');
+        console.log('- Trigger classes:', selectTrigger.className);
+        console.log('- Dropdown classes:', selectDropdown.className);
+        console.log('- Dropdown style:', selectDropdown.style.display);
+        console.log('- Dropdown computed style:', window.getComputedStyle(selectDropdown).display);
+        
+        // Remove any inline display style first
+        selectDropdown.style.removeProperty('display');
+        selectDropdown.style.removeProperty('visibility');
+        selectDropdown.style.removeProperty('opacity');
+        
+        selectTrigger.classList.add('active');
+        selectDropdown.classList.add('show');
+        
+        // Force the display with important
+        selectDropdown.style.setProperty('display', 'block', 'important');
+        selectDropdown.style.setProperty('visibility', 'visible', 'important');
+        selectDropdown.style.setProperty('opacity', '1', 'important');
+        
+        console.log('After adding classes and styles:');
+        console.log('- Trigger classes:', selectTrigger.className);
+        console.log('- Dropdown classes:', selectDropdown.className);
+        console.log('- Dropdown style:', selectDropdown.style.display);
+        console.log('- Dropdown computed style:', window.getComputedStyle(selectDropdown).display);
+        
+        if (dropdownSearch) {
+          dropdownSearch.focus();
+          console.log('🔍 Search input focused');
+        }
+        
+        showAllOptions();
+        
+        console.log('Final state after opening:');
+        console.log('- Trigger classes:', selectTrigger.className);
+        console.log('- Dropdown classes:', selectDropdown.className);
+        console.log('- Dropdown style:', selectDropdown.style.display);
+        console.log('- Dropdown computed style:', window.getComputedStyle(selectDropdown).display);
+        console.log('- Dropdown offsetHeight:', selectDropdown.offsetHeight);
+        console.log('- Dropdown offsetWidth:', selectDropdown.offsetWidth);
+        console.log('- Dropdown getBoundingClientRect:', selectDropdown.getBoundingClientRect());
+      }
+      
+      function closeDropdown() {
+        console.log('🔒 Closing dropdown...');
+        console.log('Before closing:');
+        console.log('- Trigger classes:', selectTrigger.className);
+        console.log('- Dropdown classes:', selectDropdown.className);
+        console.log('- Dropdown style:', selectDropdown.style.display);
+        
+        selectTrigger.classList.remove('active');
+        selectDropdown.classList.remove('show');
+        
+        // Force hide with important
+        selectDropdown.style.setProperty('display', 'none', 'important');
+        selectDropdown.style.setProperty('visibility', 'hidden', 'important');
+        selectDropdown.style.setProperty('opacity', '0', 'important');
+        
+        console.log('After closing:');
+        console.log('- Trigger classes:', selectTrigger.className);
+        console.log('- Dropdown classes:', selectDropdown.className);
+        console.log('- Dropdown style:', selectDropdown.style.display);
+        console.log('- Dropdown computed style:', window.getComputedStyle(selectDropdown).display);
+        
+        if (dropdownSearch) {
+          dropdownSearch.value = '';
+        }
+        showAllOptions();
+      }
+    
+    function filterOptions(searchTerm) {
+      if (searchTerm === '') {
+        showAllOptions();
+        return;
+      }
+      
+      options.forEach(option => {
+        const optionText = option.textContent.toLowerCase();
+        const optionSearchTerm = option.getAttribute('data-search') ? option.getAttribute('data-search').toLowerCase() : '';
+        
+        if (optionText.includes(searchTerm) || optionSearchTerm.includes(searchTerm)) {
+          option.classList.remove('hidden');
+        } else {
+          option.classList.add('hidden');
+        }
+      });
+    }
+    
+      function showAllOptions() {
+        console.log('👁️ Showing all options...');
+        console.log('Options count:', options.length);
+        options.forEach((option, index) => {
+          option.classList.remove('hidden');
+          console.log(`Option ${index + 1}: ${option.textContent} - classes: ${option.className}`);
+        });
+        console.log('All options should now be visible');
+      }
+      
+      // Manual test functions
+      window.testDropdown = function() {
+        console.log('🧪 Manual dropdown test...');
+        console.log('Current state:');
+        console.log('- Trigger classes:', selectTrigger.className);
+        console.log('- Dropdown classes:', selectDropdown.className);
+        console.log('- Dropdown style:', selectDropdown.style.display);
+        console.log('- Dropdown computed style:', window.getComputedStyle(selectDropdown).display);
+        
+        console.log('Forcing dropdown to show...');
+        selectDropdown.style.setProperty('display', 'block', 'important');
+        selectDropdown.style.setProperty('position', 'absolute', 'important');
+        selectDropdown.style.setProperty('top', '100%', 'important');
+        selectDropdown.style.setProperty('left', '0', 'important');
+        selectDropdown.style.setProperty('zIndex', '9999', 'important');
+        selectDropdown.style.setProperty('backgroundColor', 'white', 'important');
+        selectDropdown.style.setProperty('border', '2px solid red', 'important');
+        selectDropdown.style.setProperty('visibility', 'visible', 'important');
+        selectDropdown.style.setProperty('opacity', '1', 'important');
+        
+        console.log('After forcing:');
+        console.log('- Dropdown style:', selectDropdown.style.display);
+        console.log('- Dropdown computed style:', window.getComputedStyle(selectDropdown).display);
+        console.log('- Dropdown offsetHeight:', selectDropdown.offsetHeight);
+        console.log('- Dropdown offsetWidth:', selectDropdown.offsetWidth);
+      };
+      
+      window.resetDropdown = resetDropdown;
+      window.openDropdown = openDropdown;
+      window.closeDropdown = closeDropdown;
+      
+      console.log('🔧 Dropdown initialization complete!');
+      console.log('💡 Use testDropdown() in console to manually test');
+    }, 1000); // 1 second delay
+    
+    // Set minimum date to today for date picker
+    const dateInput = document.getElementById('start-date');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+    
+    // If no date is set, set default to tomorrow
+    if (!dateInput.value) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      dateInput.value = tomorrow.toISOString().split('T')[0];
+    }
+  });
+</script>
+
+</body>
+</html>
+
+
+      
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
+
+

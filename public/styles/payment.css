@@ -1,0 +1,464 @@
+
+
+ body {
+      background: #f8f9fa;
+    }
+    .booking-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 20px;
+      position: absolute;
+      max-width: 500px;
+      margin-top: -130px;
+      /* align-items: end; */
+      right: 50px;
+    }
+    .price-section {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .nav-tabs .nav-link.active {
+      background: none;
+      border: none;
+      border-bottom: 3px solid #0a2342;
+      font-weight: 600;
+      color: #0a2342;
+    }
+    .nav-tabs .nav-link {
+      border: none;
+      color: #000;
+      font-weight: 500;
+    }
+    .form-control,
+    .form-select {
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .btn-darkblue {
+      background-color: #0a2342;
+      color: #fff;
+      font-weight: 500;
+      border-radius: 6px;
+    }
+    .btn-darkblue:hover {
+      background-color: #03294e;
+      color: #fff;
+    }
+    .btn-outline-darkblue {
+      border: 1px solid #0a2342;
+      color: #0a2342;
+      font-weight: 500;
+      border-radius: 6px;
+    }
+    .btn-outline-darkblue:hover {
+      background-color: #0a2342;
+      color: #fff;
+    }
+    .error-text {
+      color: red;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+
+
+
+    /*table section  */
+   
+    
+    .card-custom {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+      /* padding: 10px; */
+      width: 450px;
+      height: 400px;
+      /* margin: 30px auto; */
+    }
+    .table thead th {
+      background: #0a1b36;  /* Dark blue background */
+      color: #fff;          /* White text */
+      text-align: center;
+      border: none;         /* No border for headers */
+    }
+    .table td {
+      vertical-align: middle;
+      text-align: center;
+      background: #f8f9fa;  /* Light grey background */
+      border: none;         /* No border for data cells */
+    }
+    .table {
+      border-collapse: separate;
+      border-spacing: 0 0;  /* No border spacing */
+    }
+    .title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #0a1b36;
+    }
+    a {
+      text-decoration: none;
+      color: #0a1b36;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* main sec */
+      .section-title {
+      font-weight: bold;
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    .tour-highlights {
+      margin-top: 15px;
+    }
+    .tour-highlights ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+    .icon-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 50px;
+      margin-top: 15px;
+    }
+    .icon-list div {
+      flex: 1 1 45%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .icon-list i {
+      color: #000;
+      font-size: 16px;
+    }
+    /* cards section */
+    .tour-card {
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+      
+   
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .tour-img {
+      position: relative;
+      overflow: hidden;
+    }
+    .tour-img img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .tour-img:hover img {
+      transform: scale(1.1); /* zoom-in */
+    }
+    .featured-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #03294e;
+      color: #fff;
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    .wishlist {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 14px;
+      color: #333;
+      background: rgba(255,255,255,0.85);
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+    .wishlist i {
+      margin-right: 5px;
+      color: #03294e;
+    }
+    .tour-body {
+      padding: 20px;    
+    }
+    .tour-body h5 {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .location {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 15px;
+    }
+    .option-link {
+      color: #03294e;
+      text-decoration: underline;
+      font-weight: 500;
+    }
+    .explore-btn {
+      background: #03294e;
+      color: #fff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-size: 15px;
+      transition: 0.3s ease;
+    }
+    .explore-btn:hover {
+      background: #fff;
+      color: #03294e;
+      border: 1px solid #03294e;
+    }
+
+   
+
+
+.custom-card h5 {
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+/* Table Header */
+.custom-card .table thead tr {
+  background-color: #0a2342 !important;
+  color: #fff !important;
+}
+
+/* Table Borders + Cells */
+.custom-card .table th,
+.custom-card .table td {
+  vertical-align: middle;
+  text-align: center;
+  border: 1px solid #dee2e6 !important;
+  padding: 10px;
+}
+
+/* Links */
+.custom-card a {
+  color: #0a2342;
+  text-decoration: underline;
+  font-weight: 500;
+}
+.custom-card a:hover {
+  color: #03294e;
+}
+
+
+
+/* top plan */
+
+        
+        
+     
+        
+        .info-row {
+            background-color: #aeb6bd57;
+            color:black;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .duration-badge {
+            background-color: #0d2e52;
+            color:white;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            padding: 6px 12px;
+        }
+        
+        .elevation-text {
+            color: black;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .expand-icon {
+            color:black;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            user-select: none;
+        }
+        
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+        
+        .route-highlights {
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .route-highlights.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+        
+        .route-highlights:not(.collapsed) {
+            max-height: 300px;
+            opacity: 1;
+        }
+        
+        .route-highlights h5 {
+            color: #000000;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .route-highlights ul {
+            padding-left: 0;
+            list-style: none;
+        }
+        
+        .route-highlights li {
+            color: #1f1f1f;
+            font-size: 16px;
+            margin-bottom: 8px;
+            padding-left: 24px;
+            position: relative;
+        }
+        
+        .route-highlights li:before {
+            content: "•";
+            color: #495057;
+            font-weight: bold;
+            position: absolute;
+            left: 8px;
+        }
+
+        
+    .share-container {
+      position: relative;
+      display: inline-block;
+    }
+    .btn-share {
+      width: 35px;
+      height: 35px;
+      background-color:transparent;
+      border: 1px solid red;
+      color: red;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .btn-share:hover {
+      background: red;
+      color: white;
+    }
+    /* Dropdown */
+    .share-dropdown {
+      position: absolute;
+      top: 45px;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: max-height 0.6s ease, opacity 0.6s ease, transform 0.6s ease;
+    }
+    .share-container:hover .share-dropdown {
+      max-height: 400px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .share-dropdown .btn {
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      color: red;
+      border: 1px solid red;
+      transition: all 0.3s ease;
+    }
+    .share-dropdown .btn:hover{ background: red; color: white; }
+    .share-dropdown .btn
+    .photos:hover {
+      background: red;
+      color: white;
+    }
+    .btn.location:hover,
+    .btn.review-summary:hover {
+      color: red !important;
+      text-decoration: none;
+    }
+
+    /* carosel */
+
+
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-track img {
+  width: 450px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 7px;
+
+  transform: scale(0.9);
+  transition: all 0.5s ease;
+  flex-shrink: 0;
+}
+
+.carousel-track img.center {
+  opacity: 1;
+  /* transform: scale(1.2); */
+}
+
+/* arrows */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) translateY(-20px);
+  width: 50px;
+  height: 50px;
+
+  background: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.carousel-container:hover .arrow {
+  opacity: 1;
+  transform: translateY(-50%) translateY(0);
+}
+
+.arrow-left { left: 40px; }
+.arrow-right { right: 40px; }
+.arrow i { font-size: 20px; }
+
+
+       
+  

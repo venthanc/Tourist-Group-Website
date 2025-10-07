@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Language Dropdown Debug</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1>Language Dropdown Debug Page</h1>
+    
+    <!-- Test the navbar partial -->
+    <%- include('partials/navbar', { user: user, isAuthenticated: isAuthenticated, currentPage: 'debug' }) %>
+    
+    <!-- Test the language script -->
+    <%- include('partials/language-script') %>
+    
+    <div class="mt-5">
+      <h3>Debug Information:</h3>
+      <p>Check the browser console for detailed debugging information.</p>
+      <p>This page tests the language dropdown functionality in isolation.</p>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

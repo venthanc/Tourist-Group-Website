@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery - The Magpie Trek And Tours</title>
+  <link rel="stylesheet" href="styles/gallery.css">
+  <link rel="stylesheet" href="/styles/home.css">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- GLightbox CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet">
+  
+  <!-- Custom Lightbox Styles -->
+  <style>
+    /* GLightbox custom styles for perfect centering */
+    .glightbox-clean .gslide-image img,
+    .glightbox-clean .gslide img {
+      object-fit: contain !important;
+      object-position: center center !important;
+      width: auto !important;
+      height: auto !important;
+      max-width: 90vw !important;
+      max-height: 90vh !important;
+      border-radius: 8px;
+      display: block !important;
+      margin: 0 auto !important;
+    }
+    
+    .glightbox-clean .gslide-image,
+    .glightbox-clean .gslide-media,
+    .glightbox-clean .gslide {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+    }
+    
+    .glightbox-clean .ginner-container {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+    
+    .glightbox-clean .gslide-inner-content {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Hide description column if present to avoid pushing media */
+    .glightbox-clean .gslide-description {
+      display: none !important;
+    }
+
+    /* Ensure media wrapper participates in flex centering */
+    .glightbox-clean .gslide-media {
+      position: static !important;
+      margin: 0 auto !important;
+    }
+
+    /* Ensure every lightbox slide uses flex centering */
+    .glightbox-container .ginner-container,
+    .glightbox-container .gslide,
+    .glightbox-container .gslide-media,
+    .glightbox-container .gslide-image {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    /* Center the media itself within the slide */
+    .glightbox-container .gslide-media img,
+    .glightbox-container .gslide-image img,
+    .glightbox-container .gslide img {
+      display: block !important;
+      margin: 0 auto !important;
+      max-width: 90vw !important;
+      max-height: 90vh !important;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain !important;
+      object-position: center center !important;
+    }
+
+    /* Force parent overlay and slider to be flex centered, any skin */
+    .glightbox-open .glightbox-container,
+    .glightbox-open .glightbox-container .gcontainer,
+    .glightbox-open .glightbox-container .gslider,
+    .glightbox-open .glightbox-container .ginner-container,
+    .glightbox-open .glightbox-container .gslide,
+    .glightbox-open .glightbox-container .gslide-media {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    .glightbox-open .glightbox-container .gslide {
+      width: 100vw !important;
+      height: 100vh !important;
+    }
+    
+    /* Ensure lightbox background is dark and covers full screen */
+    .glightbox-clean .goverlay {
+      background: rgba(0, 0, 0, 0.95) !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 9999 !important;
+    }
+    
+    /* Main container positioning */
+    .glightbox-clean {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 10000 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    
+    /* Style navigation arrows */
+    .glightbox-clean .gnext,
+    .glightbox-clean .gprev {
+      color: white !important;
+      font-size: 24px !important;
+      z-index: 10001 !important;
+    }
+    
+    /* Style close button */
+    .glightbox-clean .gclose {
+      color: white !important;
+      font-size: 24px !important;
+      z-index: 10001 !important;
+    }
+  </style>
+
+</head>
+<body>
+    <%- include('partials/navbar', { user: user, isAuthenticated: isAuthenticated, currentPage: 'gallery' }) %>
+    <%- include('partials/language-script') %> 
+<!-- Hero Section -->
+<section class="position-relative text-white text-center d-flex align-items-center justify-content-center mt-5  " 
+         style="background: url('/images/about-header.jpg') center/cover no-repeat; height: 300px; margin-top: 80px;">
+
+  <!-- Blackish Overlay -->
+  <div class="position-absolute top-0 start-0 w-100 h-100" 
+       style="background-color: rgba(0,0,0,0.6);"></div>
+
+  <!-- Content -->
+  <div class="position-relative">
+    <h1 class="fw-bold">Gallery</h1>
+    <p>
+      <a href="#" class="text-white text-decoration-none">Home</a> 
+      <span class="mx-2">&gt;</span> 
+      <span>Gallery</span>
+    </p>
+  </div>
+</section>
+
+
+<div class="container m-5 mt-5 pt-5 pb-3">
+<h1 class="text-center text-bold mb-2">
+   <b> Take A Look Our Gallery</b>
+</h1>
+<P class="text-center">Explore the stunning landscapes and unforgettable moments captured on our adventures. Browse through our gallery to see the beauty of Northern Pakistan and the experiences that await you.</P>
+</div>
+
+
+
+
+
+
+
+<section id="portfolio" class="portfolio section">
+
+  <div class="container">
+    <!-- Filters -->
+    <ul class="portfolio-filters isotope-filters">
+      <li data-filter="*" class="filter-active"> Show All</li>
+      <li data-filter=".filter-tours"> Tours</li>
+      <li data-filter=".filter-events"> Events</li>
+      <li data-filter=".filter-featured"> Featured</li>
+      <li data-filter=".filter-general"> General</li>
+    </ul>
+
+    <!-- Portfolio Items -->
+    <div class="row gy-4 isotope-container">
+
+      <% if (typeof galleryImages !== 'undefined' && galleryImages.length > 0) { %>
+        <% galleryImages.forEach(function(image) { %>
+          <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-<%= image.category %>">
+            <div class="portfolio-content position-relative">
+              <img src="<%= image.imageUrl %>" alt="<%= image.title %>">
+              <div class="overlay-shadow"></div>
+              <a href="<%= image.imageUrl %>" class="arrow-circle glightbox"></a><i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <!-- No Data Placeholder -->
+        <div class="col-12">
+          <div class="no-data-placeholder" style="text-align: center; padding: 60px 20px; margin: 40px 0;">
+            <div style="background: #f8f9fa; border-radius: 12px; padding: 50px; border: 2px dashed #dee2e6; max-width: 600px; margin: 0 auto;">
+              <i class="bi bi-images" style="font-size: 48px; color: #6c757d; margin-bottom: 20px;"></i>
+              <h3 style="color: #0b1a1a; font-weight: 600; margin-bottom: 12px;">No Gallery Images Available</h3>
+              <p style="color: #6b6f72; margin-bottom: 0; font-size: 15px;">
+                Our gallery is currently being updated with stunning new images from our latest adventures. Please check back soon to see breathtaking moments from Pakistan's northern landscapes!
+              </p>
+            </div>
+          </div>
+        </div>
+      <% } %>
+
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %> 
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Isotope JS -->
+<script src="https://cdn.jsdelivr.net/npm/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+
+<!-- GLightbox JS -->
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+<script>
+  // Init Isotope
+  var iso = new Isotope('.isotope-container', {
+    itemSelector: '.isotope-item',
+    layoutMode: 'masonry'
+  });
+
+  // Filter items
+  let filters = document.querySelectorAll('.portfolio-filters li');
+  filters.forEach(filter => {
+    filter.addEventListener('click', function () {
+      document.querySelector('.filter-active').classList.remove('filter-active');
+      this.classList.add('filter-active');
+      let filterValue = this.getAttribute('data-filter');
+      iso.arrange({ filter: filterValue });
+    });
+  });
+
+  // Init GLightbox for images
+  const lightbox = GLightbox({ 
+    selector: '.glightbox',
+    touchNavigation: true,
+    loop: true,
+    autoplayVideos: false,
+    skin: 'clean',
+    closeButton: true,
+    touchFollowAxis: true,
+    keyboardNavigation: true,
+    width: '90vw',
+    height: '90vh',
+    videosWidth: '90vw',
+    beforeSlideChange: function(slide, data) {
+      // Ensure image is properly centered
+      return true;
+    }
+  });
+
+  // Image hover effects (if needed)
+  document.querySelectorAll('.portfolio-content img').forEach(img => {
+    img.addEventListener('load', () => {
+      // Image loaded successfully
+    });
+  });
+</script>
+
+<!-- Bootstrap JavaScript Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

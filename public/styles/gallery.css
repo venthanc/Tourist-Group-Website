@@ -1,0 +1,106 @@
+body { font-family: Arial, sans-serif; background: #f5f6fa; padding: 40px 0; }
+.section-title { text-align: center; margin-bottom: 40px; }
+
+.portfolio .portfolio-filters {
+  list-style: none; display: flex; justify-content: center; gap: 15px; padding: 0; margin-bottom: 30px;
+}
+.portfolio .portfolio-filters li {
+  cursor: pointer; padding: 8px 16px; border-radius: 10px; background: #eaeaea; transition: all 0.3s;
+}
+.portfolio .portfolio-filters .filter-active { background: #021635; color: #fff; }
+
+
+.portfolio .portfolio-content { position: relative; overflow: hidden; border-radius: 8px; }
+
+.portfolio .portfolio-content:hover img{ transform: scale(1.05); }
+
+/* Initial narrow line - top center */
+.overlay-shadow {
+position: absolute;
+top: 0;
+left: 50%;
+width: 30px;           /* narrow */
+height: 50px;           /* thin horizontal */
+background: rgba(0,0,0,0.5);
+transform: translateX(-50%) scaleX(0.05) scaleY(0.05);
+transform-origin: top center;
+transition: transform 0.6s ease, width 0.0001s ease, height 8s ease-in-out, opacity 0.6s ease;
+
+opacity: 0.7;
+transition: all 0.6s ease;
+z-index: 1;
+border-radius: 2px;
+transform-style: preserve-3d;
+}
+
+/* Hover - spread width and height smoothly */
+.portfolio .portfolio-content:hover .overlay-shadow {
+width: 100%;            /* full width */
+height: 100%;           /* full height */
+transform: translateX(-50%) scaleX(1) scaleY(1);
+opacity: 0.8;
+}
+
+/* Hover remove - collapse back to narrow line */
+.portfolio .portfolio-content:not(:hover) .overlay-shadow {
+width: 20px;
+height: 5px;
+transform: translateX(-50%) scaleX(0.05) scaleY(0.05);
+opacity: 0.7;
+}
+
+.portfolio {
+position: relative;
+overflow: hidden;
+}
+
+.arrow-circle {
+position: absolute;
+bottom: 20px;
+right: 20px;
+width: 50px;
+height: 50px;
+border-radius: 50%;
+background: rgb(150, 206, 150);
+display: flex;
+align-items: center;
+justify-content: center;
+opacity: 0;
+transform: translate(50%, 50%) scale(0.5) rotate(40deg); /* 👈 Start bottom-right */
+transition: all 0.9s ease;
+z-index: 1;
+}
+
+
+.arrow-circle i {
+display: inline-block;
+transition: transform 0.4s ease; /* Smooth rotation */
+transform: rotate(0deg);       /* Original angle */
+}
+/* Hover hone par circle center aa jaye */
+.portfolio .portfolio-content:hover .arrow-circle {
+opacity: 1;
+top: 50%;
+left: 50%;
+color: #ffffff;
+bottom: auto;
+right: auto;
+transform: translate(-50%, -50%) scale(1) rotate(-40deg); /* 👈 Center me aake normal ho */
+}
+
+/* Sirf arrow pe hover karne par color + rotation */
+.arrow-circle:hover {
+background: rgb(2, 5, 36);
+
+}
+.arrow-circle:hover i {
+transform: rotate(-90deg);  /* 👈 Yaha angle change */
+transition: all 0.6s ease-in-out;
+}
+.portfolio-content img{
+width: 100%;
+height: 50vh;
+display: block;
+transition: transform 0.5s;
+/* object-fit: cover; */
+}

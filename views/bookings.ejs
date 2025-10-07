@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - Mountain Trek Tours</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/styles/home.css">
+    <link rel="stylesheet" href="/styles/bookings.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <%- include('partials/navbar', { user: user, isAuthenticated: isAuthenticated, currentPage: 'bookings' }) %>
+
+    <!-- Bookings Header -->
+    <div class="bookings-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="bi bi-calendar-check me-3"></i>
+                        My Bookings
+                    </h1>
+                    <p class="mb-0">View and manage all your tour bookings</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="/" class="btn btn-light">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Book New Tour
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number"><%= bookings.length %></div>
+                    <div>Total Bookings</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number"><%= bookings.filter(b => b.bookingStatus === 'confirmed').length %></div>
+                    <div>Confirmed</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number"><%= bookings.filter(b => b.bookingStatus === 'completed').length %></div>
+                    <div>Completed</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number">$<%= bookings.reduce((sum, b) => sum + b.paymentInfo.amount, 0).toLocaleString() %></div>
+                    <div>Total Spent</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+            <button class="btn btn-outline-primary filter-btn active" data-filter="all">
+                All Bookings (<%= bookings.length %>)
+            </button>
+            <button class="btn btn-outline-success filter-btn" data-filter="confirmed">
+                Confirmed (<%= bookings.filter(b => b.bookingStatus === 'confirmed').length %>)
+            </button>
+            <button class="btn btn-outline-info filter-btn" data-filter="completed">
+                Completed (<%= bookings.filter(b => b.bookingStatus === 'completed').length %>)
+            </button>
+            <button class="btn btn-outline-warning filter-btn" data-filter="pending">
+                Pending (<%= bookings.filter(b => b.bookingStatus === 'pending').length %>)
+            </button>
+            <button class="btn btn-outline-danger filter-btn" data-filter="cancelled">
+                Cancelled (<%= bookings.filter(b => b.bookingStatus === 'cancelled').length %>)
+            </button>
+        </div>
+
+        <!-- Bookings List -->
+        <div class="row">
+            <div class="col-12">
+                <% if (bookings && bookings.length > 0) { %>
+                    <div id="bookingsList">
+                        <% bookings.forEach(function(booking) { %>
+                            <% 
+                                // Determine which package/trail data to use
+                                const packageData = booking.tourPackageId || booking.hikingId;
+                                const packageTitle = packageData ? packageData.title : 'Unknown Package';
+                                const packageLocation = packageData ? packageData.location : 'Unknown Location';
+                                const packageImageUrl = packageData && packageData.imageUrl ? 
+                                    (packageData.imageUrl.startsWith('http') ? packageData.imageUrl : 'http://localhost:3000' + packageData.imageUrl) : 
+                                    '/images/hero-img1.webp';
+                            %>
+                            <div class="booking-card" data-status="<%= booking.bookingStatus %>">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2">
+                                        <img src="<%= packageImageUrl %>" 
+                                             alt="<%= packageTitle %>" class="booking-image">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <h5 class="mb-2"><%= packageTitle %></h5>
+                                        <p class="text-muted mb-1">
+                                            <i class="bi bi-geo-alt me-1"></i>
+                                            <%= packageLocation %>
+                                        </p>
+                                        <p class="date-info mb-1">
+                                            <i class="bi bi-calendar me-1"></i>
+                                            <%= new Date(booking.travelInfo.departureDate).toLocaleDateString() %> - 
+                                            <%= new Date(booking.travelInfo.returnDate).toLocaleDateString() %>
+                                        </p>
+                                        <p class="text-muted mb-1">
+                                            <i class="bi bi-people me-1"></i>
+                                            <%= booking.travelInfo.numberOfTravelers %> traveler(s)
+                                        </p>
+                                        <p class="booking-number mb-0">
+                                            <i class="bi bi-hash me-1"></i>
+                                            <%= booking.bookingNumber %>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <div class="booking-status status-<%= booking.bookingStatus %> mb-2">
+                                            <%= booking.bookingStatus.charAt(0).toUpperCase() + booking.bookingStatus.slice(1) %>
+                                        </div>
+                                        <div class="price-highlight">
+                                            $<%= booking.paymentInfo.amount.toLocaleString() %>
+                                        </div>
+                                        <small class="text-muted">
+                                            <%= booking.paymentInfo.currency %>
+                                        </small>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="action-buttons">
+                                            <button class="btn btn-outline-primary btn-sm" 
+                                                    onclick="viewBookingDetails('<%= booking._id %>')">
+                                                <i class="bi bi-eye me-1"></i>
+                                                View Details
+                                            </button>
+                                            <button class="btn btn-outline-success btn-sm" 
+                                                    onclick="downloadBooking('<%= booking._id %>')">
+                                                <i class="bi bi-download me-1"></i>
+                                                Download
+                                            </button>
+                                            <% if (booking.bookingStatus === 'confirmed') { %>
+                                                <button class="btn btn-outline-danger btn-sm" 
+                                                        onclick="cancelBooking('<%= booking._id %>')">
+                                                    <i class="bi bi-x-circle me-1"></i>
+                                                    Cancel
+                                                </button>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <div class="empty-state">
+                        <i class="bi bi-calendar-x"></i>
+                        <h4>No Bookings Yet</h4>
+                        <p>You haven't made any bookings yet. Start exploring our amazing tour packages!</p>
+                        <a href="/" class="btn btn-primary">
+                            <i class="bi bi-compass me-2"></i>
+                            Explore Tours
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Details Modal -->
+    <div class="modal fade" id="bookingDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Booking Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="bookingDetailsContent">
+                    <!-- Content will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="downloadCurrentBooking()">
+                        <i class="bi bi-download me-1"></i>
+                        Download
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <%- include('partials/footer') %>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let currentBookingId = null;
+
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const bookingCards = document.querySelectorAll('.booking-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+
+                    const filter = this.getAttribute('data-filter');
+
+                    bookingCards.forEach(card => {
+                        if (filter === 'all' || card.getAttribute('data-status') === filter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+
+        // View booking details
+        async function viewBookingDetails(bookingId) {
+            currentBookingId = bookingId;
+            try {
+                const response = await fetch(`/api/bookings/${bookingId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch booking details');
+                }
+                
+                const booking = await response.json();
+                
+                const content = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Booking Information</h6>
+                            <p><strong>Booking Number:</strong> ${booking.bookingNumber}</p>
+                            <p><strong>Package:</strong> ${booking.tourPackageId.title}</p>
+                            <p><strong>Location:</strong> ${booking.tourPackageId.location}</p>
+                            <p><strong>Duration:</strong> ${booking.tourPackageId.duration}</p>
+                            <p><strong>Status:</strong> <span class="badge bg-${getStatusColor(booking.bookingStatus)}">${booking.bookingStatus}</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Travel Details</h6>
+                            <p><strong>Departure:</strong> ${new Date(booking.travelInfo.departureDate).toLocaleDateString()}</p>
+                            <p><strong>Return:</strong> ${new Date(booking.travelInfo.returnDate).toLocaleDateString()}</p>
+                            <p><strong>Travelers:</strong> ${booking.travelInfo.numberOfTravelers}</p>
+                            <p><strong>Special Requests:</strong> ${booking.travelInfo.specialRequests || 'None'}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Customer Information</h6>
+                            <p><strong>Name:</strong> ${booking.customerInfo.firstName} ${booking.customerInfo.lastName}</p>
+                            <p><strong>Email:</strong> ${booking.customerInfo.email}</p>
+                            <p><strong>Phone:</strong> ${booking.customerInfo.phone}</p>
+                            <p><strong>Nationality:</strong> ${booking.customerInfo.nationality}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Payment Information</h6>
+                            <p><strong>Amount:</strong> $${booking.paymentInfo.amount.toLocaleString()}</p>
+                            <p><strong>Currency:</strong> ${booking.paymentInfo.currency}</p>
+                            <p><strong>Payment Status:</strong> <span class="badge bg-success">${booking.paymentInfo.paymentStatus}</span></p>
+                            <p><strong>Payment Date:</strong> ${new Date(booking.paymentInfo.paymentDate).toLocaleString()}</p>
+                        </div>
+                    </div>
+                    ${booking.customerInfo.emergencyContact && booking.customerInfo.emergencyContact.name ? `
+                        <hr>
+                        <div class="row">
+                            <div class="col-12">
+                                <h6>Emergency Contact</h6>
+                                <p><strong>Name:</strong> ${booking.customerInfo.emergencyContact.name}</p>
+                                <p><strong>Phone:</strong> ${booking.customerInfo.emergencyContact.phone}</p>
+                                <p><strong>Relationship:</strong> ${booking.customerInfo.emergencyContact.relationship}</p>
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+                
+                document.getElementById('bookingDetailsContent').innerHTML = content;
+                
+                const modal = new bootstrap.Modal(document.getElementById('bookingDetailsModal'));
+                modal.show();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to load booking details');
+            }
+        }
+
+        // Download booking
+        function downloadBooking(bookingId) {
+            window.open(`/bookings/${bookingId}/download`, '_blank');
+        }
+
+        // Download current booking from modal
+        function downloadCurrentBooking() {
+            if (currentBookingId) {
+                downloadBooking(currentBookingId);
+            }
+        }
+        
+        // Get status color for badges
+        function getStatusColor(status) {
+            switch(status) {
+                case 'confirmed': return 'success';
+                case 'pending': return 'warning';
+                case 'cancelled': return 'danger';
+                case 'completed': return 'info';
+                default: return 'secondary';
+            }
+        }
+        
+        // Cancel booking
+        async function cancelBooking(bookingId) {
+            if (!confirm('Are you sure you want to cancel this booking?')) {
+                return;
+            }
+            
+            try {
+                // This would need a backend endpoint to handle cancellation
+                alert('Booking cancellation feature will be implemented soon.');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to cancel booking');
+            }
+        }
+    </script>
+</body>
+</html>

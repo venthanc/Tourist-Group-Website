@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - The Magpie Trek And Tours </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=HK+Grotesk:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/home.css">
+  <!-- Removed invalid link to /style.css to avoid MIME type html warning -->
+</head>
+<body>
+  <%- include('partials/navbar', { user: user, isAuthenticated: isAuthenticated, currentPage: 'home' }) %>
+  <%- include('partials/language-script') %>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="row align-items-center">
+        <div class="col-lg-6 col-md-12 mb-4 mb-lg-0">
+          <div class="hero-content">
+            <div class="hero-copy">
+              <h1 class="hero-title">The Magpie Treks & Tours</h1>
+              <p class="hero-sub">Trekking, Hunting, and Exploring Pakistan's Mountain Paradise</p>
+            </div>
+
+            <!-- Book Now Button -->
+            <div class="hero-cta">
+              <button class="book-now-btn">Book Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12">
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-blob">
+              <div class="hero-slider">
+                <div class="hero-slide active" style="background-image:url('/images/hero-img1.webp');"></div>
+                <div class="hero-slide" style="background-image:url('/images/hero-img2.webp');"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+       
+          <div class="search-main">
+            <!-- Search Bar -->
+          
+              <form class="search-bar" action="/hiking" method="GET" id="homepageSearchForm">
+                <div class="search-form">
+                  <div class="">
+                    <div class="search-field">
+                      <span class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9 4.03 9 9 9z" fill="none" stroke-width="1.6"/><path d="M20 20l3 3" stroke-width="1.6"/></svg>
+                      </span>
+                      <div class="field-text">
+                        <div class="label">Destinations</div>
+                        <div class="destination-select">
+                          <div class="custom-select" id="destination-select">
+                            <div class="select-trigger" id="select-trigger">
+                              <span class="select-value">Select Destination</span>
+                              <svg class="select-arrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
+                            </div>
+                            <input type="hidden" name="location" id="locationInput" value="">
+                            <div class="select-dropdown" id="select-dropdown">
+                              <div class="search-container">
+                                <input type="text" class="dropdown-search" placeholder="Search destinations..." id="dropdown-search">
+                              </div>
+                              <div class="options-list" id="options-list">
+                                <div class="option" data-value="hunza" data-search="hunza valley">Hunza Valley</div>
+                                <div class="option" data-value="skardu" data-search="skardu">Skardu</div>
+                                <div class="option" data-value="gilgit" data-search="gilgit">Gilgit</div>
+                                <div class="option" data-value="astore" data-search="astore valley">Astore Valley</div>
+                                <div class="option" data-value="ghizer" data-search="ghizer valley">Ghizer Valley</div>
+                                <div class="option" data-value="nagar" data-search="nagar valley">Nagar Valley</div>
+                                <div class="option" data-value="diamer" data-search="diamer">Diamer</div>
+                                <div class="option" data-value="gupis" data-search="gupis">Gupis</div>
+                                <div class="option" data-value="shigar" data-search="shigar valley">Shigar Valley</div>
+                                <div class="option" data-value="khaplu" data-search="khaplu valley">Khaplu Valley</div>
+                                <div class="option" data-value="rongdu" data-search="rongdu valley">Rongdu Valley</div>
+                                <div class="option" data-value="kharmang" data-search="kharmang">Kharmang</div>
+                                <div class="option" data-value="gultari" data-search="gultari">Gultari</div>
+                                <div class="option" data-value="deosai" data-search="deosai plains">Deosai Plains</div>
+                                <div class="option" data-value="k2" data-search="k2 base camp">K2 Base Camp</div>
+                                <div class="option" data-value="concordia" data-search="concordia">Concordia</div>
+                                <div class="option" data-value="baltoro" data-search="baltoro glacier">Baltoro Glacier</div>
+                                <div class="option" data-value="batura" data-search="batura glacier">Batura Glacier</div>
+                                <div class="option" data-value="passu" data-search="passu cones">Passu Cones</div>
+                                <div class="option" data-value="attabad" data-search="attabad lake">Attabad Lake</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="">
+                    <div class="search-field">
+                      <span class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M4 20l8-16 8 16" fill="none" stroke-width="1.6"/></svg>
+                      </span>
+                      <div class="field-text">
+                        <div class="label">Activity</div>
+                        <select class="input activity-dropdown" name="activity">
+                          <option value="">All Activity</option>
+                          <option value="hiking">Hiking</option>
+                          <option value="trekking">Trekking</option>
+                          <option value="photography">Photography</option>
+                          <option value="trophy hunting">Trophy Hunting</option>
+                          <option value="camping">Camping</option>
+                          <option value="cultural">Cultural</option>
+                          <option value="sports">Sports</option>
+                          <option value="adventure sports">Adventure Sports</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="">
+                    <div class="search-field">
+                      <span class="icon">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3" ry="3" fill="none" stroke-width="1.6"/><path d="M3 10h18M8 4v4M16 4v4" stroke-width="1.6"/></svg>
+                      </span>
+                      <div class="field-text">
+                        <div class="label">Dates</div>
+                        <input type="date" class="input date-input" id="start-date" name="startDate" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="">
+                    <div class="search-field">
+                      <span class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 116 0 3 3 0 01-6 0zM3 20a7 7 0 0118 0" fill="none" stroke-width="1.6"/></svg>
+                      </span>
+                      <div class="field-text">
+                        <div class="label">Guests</div>
+                        <select class="input guest-dropdown" name="guests">
+                          <option value="1">1 Person</option>
+                          <option value="2" selected>2 Persons</option>
+                          <option value="3">3 Persons</option>
+                          <option value="4">4 Persons</option>
+                          <option value="5">5 Persons</option>
+                          <option value="6">6 Persons</option>
+                          <option value="7">7 Persons</option>
+                          <option value="8">8 Persons</option>
+                          <option value="9">9 Persons</option>
+                          <option value="10">10+ Persons</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-lg-2 col-md-6 col-12" style="display: flex;align-items: center;">
+                    <button type="submit" class="search-btn w-100" aria-label="Search">
+                      <svg viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" fill="none" stroke-width="2"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </form>
+          
+          </div>
+       
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTIOn 2 -->
+
+  <section class="sec-2">
+    <div class="sec-2-content">
+      <h2>INTRODUCTION</h2>
+      <p>At The Magpie Treks & Tours, we believe that adventure isn’t just a journey it’s a way of life. Founded by explorers and for explorers, MTT was born from a deep-rooted love for Pakistan’s untouched wilderness. Our mission is simple yet profound. To offer travelers a rare and immersive experience that forges lasting memories and a genuine connection with nature. Guided by the principles of responsibility, safety, and respect for nature, we aim to showcase the grandeur of Northern Pakistan through sustainable and respectful tourism. Every trip is meticulously crafted to blend the thrill of adventure with cultural immersion, allowing you to not just witness the landscape but to truly live it. Whether you’re scaling a low-altitude summit, joining a licensed trophy hunt, or exploring the hidden gems of our scenic trails, our goal is to deliver not only an adrenaline rush but also a newfound appreciation for the beauty and diversity of this extraordinary land.</p>
+    </div>
+  </section>
+
+  <%- include('partials/slider') %>
+
+  <section class="core-services" id="coreServicesSection" aria-labelledby="core-services-heading" style="font-family: 'HK Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;">
+    <div class="container">
+      <h2 id="core-services-heading" class="section-title">Our Core Services</h2>
+  
+      <p class="section-sub">
+        The Magpie Treks & Tours We offer a range of tailored travel services to make your journey unforgettable. From personalized tour packages and expert travel consulting to seamless accommodation bookings and transport arrangements, we’ve got you covered. Our team ensures every detail is taken care of, so you can focus on enjoying your trip.
+      </p>
+  
+      <!-- THREE CARDS -->
+      <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="service-card anim-left" data-anim="left" role="article" aria-label="Adventure Tourism card">
+            <div class="icon-hex hex-pink" aria-hidden="true">
+              <!-- sample SVG icon -->
+              <svg viewBox="0 0 100 100" width="44" height="44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs><clipPath id="hex1"><path d="M50 2 L88 25 L88 75 L50 98 L12 75 L12 25 Z"></path></clipPath></defs>
+                <g clip-path="url(#hex1)"><g transform="translate(20,18)" fill="#f05b66"><circle cx="18" cy="10" r="6"/><path d="M6 46c6-14 20-14 28-12l2-8 6 2-4 14-12 6-2 10-18-12z"/></g></g>
+              </svg>
+            </div>
+            <h3>Adventure Tourism & Low-Altitude Summits</h3>
+            <p>Embrace your adventurous side with our guided tours through some of Pakistan’s most iconic landscapes. Suitable for all experience levels, our tours cater to both seasoned climbers and beginners.</p>
+          </div>
+        </div>
+  
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="service-card anim-up" data-anim="up" role="article" aria-label="Trophy Hunting card">
+            <div class="icon-hex hex-blue" aria-hidden="true">
+              <svg viewBox="0 0 100 100" width="44" height="44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs><clipPath id="hex2"><path d="M50 2 L88 25 L88 75 L50 98 L12 75 L12 25 Z"></path></clipPath></defs>
+                <g clip-path="url(#hex2)"><g transform="translate(20,18)" fill="#4c6bff"><path d="M12 6h36v6c0 10-8 16-18 16s-18-6-18-16V6z"/><path d="M10 32h40v6H10zM18 44h24v12H18z"/></g></g>
+              </svg>
+            </div>
+            <h3>Trophy Hunting Experiences</h3>
+            <p>Discover our ethical and regulated trophy hunting options, designed for those who wish to participate in a controlled and licensed experience that respects local laws and wildlife conservation.</p>
+          </div>
+        </div>
+  
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="service-card anim-right" data-anim="right" role="article" aria-label="Comfortable Stays card">
+            <div class="icon-hex hex-green" aria-hidden="true">
+              <svg viewBox="0 0 100 100" width="44" height="44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs><clipPath id="hex3"><path d="M50 2 L88 25 L88 75 L50 98 L12 75 L12 25 Z"></path></clipPath></defs>
+                <g clip-path="url(#hex3)"><g transform="translate(15,20)" fill="#14a37f"><circle cx="24" cy="18" r="8"/><path d="M0 58l6-8 8 2 6-6 6 6 8-2 6 8-8 6-2 8-8 0-6-6-8 6z"/></g></g>
+              </svg>
+            </div>
+            <h3>Comfortable Stays & Mobility Solutions</h3>
+            <p>We understand that a great adventure doesn’t end when you return to your accommodation. With comfortable stays and reliable transport services, we ensure that every part of your journey is safe, secure, and memorable.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- FULL-WIDTH STATS PANEL -->
+    <div class="stats-wrap" id="statsWrap" aria-hidden="false">
+      <div class="container">
+        <div class="row text-white align-items-center">
+          <div class="col-6 col-md-3">
+            <div class="stat-item" data-animate-stat>
+              <div class="stat-hex"><i class="bi bi-people" style="font-size:22px; opacity: .95;"></i></div>
+              <div class="stat-value" data-target="2000" id="stat1">0</div>
+              <div class="stat-label">Total Users</div>
+            </div>
+          </div>
+  
+          <div class="col-6 col-md-3">
+            <div class="stat-item" data-animate-stat>
+              <div class="stat-hex"><i class="bi bi-percent" style="font-size:22px; opacity: .95;"></i></div>
+              <div class="stat-value" data-target="500" id="stat2">0</div>
+              <div class="stat-label">Total Tours</div>
+            </div>
+          </div>
+  
+          <div class="col-6 col-md-3">
+            <div class="stat-item" data-animate-stat>
+              <div class="stat-hex"><i class="bi bi-hand-thumbs-up" style="font-size:22px; opacity: .95;"></i></div>
+              <div class="stat-value" data-target="6000" id="stat3">0</div>
+              <div class="stat-label">Social Likes</div>
+            </div>
+          </div>
+  
+          <div class="col-6 col-md-3">
+            <div class="stat-item" data-animate-stat>
+              <div class="stat-hex"><i class="bi bi-star" style="font-size:22px; opacity: .95;"></i></div>
+              <div class="stat-value" data-target="999" id="stat4">0</div>
+              <div class="stat-label">5 Star Ratings</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mh-hero-section py-5">
+    <div class="mh-hero-inner container-xl">
+      <div class="row align-items-center gy-4">
+        <!-- LEFT TEXT -->
+        <div class="col-12 col-lg-7">
+          <h2 class="mh-title">Discover Our Travel Guideline</h2>
+  
+          <p class="mh-lead">
+            To ensure a smooth trip, plan ahead by confirming your bookings and itineraries. Pack light, considering local weather conditions and cultural norms. Stay informed about travel advisories and destination regulations to avoid surprises, ensuring a seamless and enjoyable journey.
+          </p>
+  
+          <ul class="mh-checklist list-unstyled mt-4">
+            <li>
+              <span class="mh-check-icon" aria-hidden="true">
+                <!-- small inline SVG check -->
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 6L9 17l-5-5" stroke="#0b2a2a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span>Confirm bookings and itineraries before departure.</span>
+            </li>
+  
+            <li>
+              <span class="mh-check-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 6L9 17l-5-5" stroke="#0b2a2a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span>Pack light, considering weather and cultural norms.</span>
+            </li>
+  
+            <li>
+              <span class="mh-check-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 6L9 17l-5-5" stroke="#0b2a2a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span>Stay updated on travel advisories and regulations.</span>
+            </li>
+          </ul>
+        </div>
+  
+        <!-- RIGHT IMAGE -->
+        <div class="col-12 col-lg-5 d-flex justify-content-center">
+          <figure class="mh-photo-wrap mb-0" aria-hidden="false">
+            <!-- Use your uploaded image path; alt text describes the scene -->
+            <img src="images/k2-trek.png" alt="Hikers walking up a glacier in the mountains" class="mh-photo img-fluid">
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- TESTIMONIALS SECTION -->
+  <section id="testimonials-section" aria-labelledby="testimonials-title" tabindex="0" style="font-family: 'HK Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;">
+    <div class="ts-inner">
+      <p class="ts-kicker">Testimonials</p>
+      <h2 id="testimonials-title" class="ts-heading">Testimonials From Fellow Adventurers</h2>
+  
+      <div class="ts-stage" role="region" aria-label="Testimonials carousel">
+        <!-- floating avatars (replace with internet image URLs) -->
+        <div class="ts-avatars" aria-hidden="true">
+          <div class="ts-avatar" style="--x:6%;--y:46%;"><img src="https://randomuser.me/api/portraits/women/68.jpg" alt=""></div>
+          <div class="ts-avatar" style="--x:24%;--y:82%;"><img src="https://randomuser.me/api/portraits/men/45.jpg" alt=""></div>
+          <div class="ts-avatar" style="--x:50%;--y:92%;"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt=""></div>
+          <div class="ts-avatar" style="--x:82%;--y:22%;"><img src="https://randomuser.me/api/portraits/women/25.jpg" alt=""></div>
+          <div class="ts-avatar" style="--x:94%;--y:56%;"><img src="https://randomuser.me/api/portraits/men/11.jpg" alt=""></div>
+        </div>
+  
+        <!-- cards container (JS inserts cards) -->
+        <div class="ts-cards" id="tsCards" aria-live="polite"></div>
+  
+        <!-- dots fixed at bottom center -->
+        <div class="ts-dots" id="tsDots" role="tablist" aria-label="Testimonial pages"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ttad-section">
+
+    <!-- Top dark feature bar -->
+    <div class="ttad-features">
+      <div class="container">
+        <div class="row gy-4 align-items-start">
+          <div class="col-12 col-md-4">
+            <div class="feature">
+              <div class="icon" aria-hidden="true">
+                <!-- airplane SVG -->
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M2 15 13 9l6 2 1-1-3-5-2 1-4-2L8 5 2 15z" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <h4>20+ Destinations</h4>
+                <p>The Magpie Treks &amp; Tours made my trip unforgettable.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <div class="feature">
+              <div class="icon" aria-hidden="true">
+                <!-- compass SVG -->
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" stroke="#ffffff" stroke-width="1.6"/>
+                  <path d="M16 8 10 14l-3 1 1-3 6-6 2 2z" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <h4>Best Price Guarantee</h4>
+                <p>With The Magpie Treks &amp; Tours — unbeatable prices, guaranteed for you.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <div class="feature">
+              <div class="icon" aria-hidden="true">
+                <!-- palm tree SVG -->
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M11 22s1-8 7-10c0 0-4-4-8-2-4-2-8 2-8 2 6 2 7 10 9 10z" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 22v-8" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <h4>Top Notch Support</h4>
+                <p>Exceptional support — every step guaranteed. Reliable help anytime you need it.</p>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /.row -->
+      </div> <!-- /.container -->
+    </div> <!-- /.ttad-features -->
+
+    <!-- Content: title + subtext -->
+    <div class="ttad-content">
+      <h2 class="ttad-title">Travel Tips And Advice</h2>
+      <p class="ttad-sub">
+        Discover expert travel tips and insider advice to help you plan the perfect trip.
+        From destination guides to packing hacks, we cover everything you need for a seamless journey.
+        Stay informed with the latest travel trends and helpful resources for every adventure.
+      </p>
+
+      <!-- Cards -->
+      <div class="ttad-cards">
+        <article class="ttad-card" aria-label="Article 1">
+          <h5>Packing Like a Pro</h5>
+          <p>Learn how to pack light for long treks without missing the essentials — smart list and layering tips for changing weather.</p>
+        </article>
+
+        <article class="ttad-card" aria-label="Article 2">
+          <h5>Health & Safety Tips</h5>
+          <p>Stay safe on the trail — hydration, first aid basics, altitude preparation and local guidance to keep you confident on every trip.</p>
+        </article>
+
+        <article class="ttad-card" aria-label="Article 3">
+          <h5>Best Seasons to Visit</h5>
+          <p>Find the ideal months for different regions, considering weather windows, crowd levels, and wildlife sightings to plan better.</p>
+        </article>
+      </div>
+    </div> <!-- /.ttad-content -->
+
+  </section>
+
+
+  <script src="/js/main.js"></script>
+
+  <script>
+    // Image slider functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Hero Animation Trigger
+      function triggerHeroAnimations() {
+        const heroContent = document.querySelector('.hero-content');
+        const heroVisual = document.querySelector('.hero-visual');
+        const searchMain = document.querySelector('.search-main');
+        
+        console.log('Found elements:', {
+          heroContent: !!heroContent,
+          heroVisual: !!heroVisual,
+          searchMain: !!searchMain
+        });
+        
+        // Reset animations for fresh start
+        if (heroContent) {
+          heroContent.style.animation = 'none';
+          heroContent.offsetHeight; // Trigger reflow
+          heroContent.style.animation = 'slideInFromLeft 1.2s ease-out 0.3s forwards';
+          console.log('Hero content animation set');
+        }
+        
+        if (heroVisual) {
+          heroVisual.style.animation = 'none';
+          heroVisual.offsetHeight; // Trigger reflow
+          heroVisual.style.animation = 'slideInFromRight 1.2s ease-out 0.6s forwards';
+          console.log('Hero visual animation set');
+        }
+        
+        if (searchMain) {
+          searchMain.style.animation = 'none';
+          searchMain.offsetHeight; // Trigger reflow
+          searchMain.style.animation = 'slideInFromHero 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.9s forwards';
+          console.log('Search main animation set');
+        }
+        
+        console.log('Hero animations triggered');
+      }
+      
+      // Trigger animations on page load
+      triggerHeroAnimations();
+      
+      // Also trigger on window focus (for when user returns to tab)
+      window.addEventListener('focus', function() {
+        // Only trigger if animations haven't been seen recently
+        if (!sessionStorage.getItem('heroAnimationsTriggered')) {
+          triggerHeroAnimations();
+          sessionStorage.setItem('heroAnimationsTriggered', 'true');
+          setTimeout(() => {
+            sessionStorage.removeItem('heroAnimationsTriggered');
+          }, 5000);
+        }
+      });
+      
+      const slides = document.querySelectorAll('.hero-slide');
+      let currentSlide = 0;
+      
+      function nextSlide() {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+      }
+      
+      // Change slide every 4 seconds
+      setInterval(nextSlide, 4000);
+      
+      // Custom dropdown functionality
+      const selectTrigger = document.getElementById('select-trigger');
+      const selectDropdown = document.getElementById('select-dropdown');
+      const dropdownSearch = document.getElementById('dropdown-search');
+      const optionsList = document.getElementById('options-list');
+      const options = optionsList.querySelectorAll('.option');
+      const selectValue = document.querySelector('.select-value');
+      
+      // Toggle dropdown
+      selectTrigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isActive = selectTrigger.classList.contains('active');
+        
+        if (isActive) {
+          closeDropdown();
+        } else {
+          openDropdown();
+        }
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!selectTrigger.contains(e.target) && !selectDropdown.contains(e.target)) {
+          closeDropdown();
+        }
+      });
+      
+      // Handle option selection
+      options.forEach(option => {
+        option.addEventListener('click', function() {
+          const value = this.getAttribute('data-value');
+          const text = this.textContent;
+          
+          selectValue.textContent = text;
+          selectTrigger.setAttribute('data-value', value);
+          
+          // Update hidden input field for form submission
+          const locationInput = document.getElementById('locationInput');
+          locationInput.value = text;
+          
+          closeDropdown();
+          
+          // Clear search
+          dropdownSearch.value = '';
+          showAllOptions();
+        });
+      });
+      
+      // Handle search functionality
+      dropdownSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        filterOptions(searchTerm);
+      });
+      
+      // Prevent dropdown from closing when clicking on search input
+      dropdownSearch.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+      
+      // Keyboard navigation
+      selectTrigger.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (selectTrigger.classList.contains('active')) {
+            closeDropdown();
+          } else {
+            openDropdown();
+          }
+        }
+      });
+      
+      // Functions
+      function openDropdown() {
+        selectTrigger.classList.add('active');
+        selectDropdown.classList.add('show');
+        dropdownSearch.focus();
+        showAllOptions();
+      }
+      
+      function closeDropdown() {
+        selectTrigger.classList.remove('active');
+        selectDropdown.classList.remove('show');
+        dropdownSearch.value = '';
+        showAllOptions();
+      }
+      
+      function filterOptions(searchTerm) {
+        if (searchTerm === '') {
+          showAllOptions();
+          return;
+        }
+        
+        options.forEach(option => {
+          const optionText = option.textContent.toLowerCase();
+          const optionSearchTerm = option.getAttribute('data-search') ? option.getAttribute('data-search').toLowerCase() : '';
+          
+          if (optionText.includes(searchTerm) || optionSearchTerm.includes(searchTerm)) {
+            option.classList.remove('hidden');
+          } else {
+            option.classList.add('hidden');
+          }
+        });
+      }
+      
+      function showAllOptions() {
+        options.forEach(option => {
+          option.classList.remove('hidden');
+        });
+      }
+      
+      // Set minimum date to today for date picker
+      const dateInput = document.getElementById('start-date');
+      const today = new Date().toISOString().split('T')[0];
+      dateInput.setAttribute('min', today);
+      
+      // Set default date to tomorrow
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      dateInput.value = tomorrow.toISOString().split('T')[0];
+      
+      // Sticky Header Scroll Effect
+      const header = document.querySelector('.site-header');
+      let lastScrollTop = 0;
+      
+      window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > 50) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+        
+        lastScrollTop = scrollTop;
+      });
+      
+      // Mobile Menu Click Outside Functionality
+      const navbarToggler = document.querySelector('.navbar-toggler');
+      const navbarCollapse = document.querySelector('.navbar-collapse');
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', function(e) {
+        if (navbarCollapse.classList.contains('show')) {
+          if (!navbarCollapse.contains(e.target) && !navbarToggler.contains(e.target)) {
+            // Close the menu
+            const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+              toggle: false
+            });
+            bsCollapse.hide();
+          }
+        }
+      });
+      
+      // Close menu when clicking on nav links
+      const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          if (window.innerWidth <= 991.98) {
+            const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+              toggle: false
+            });
+            bsCollapse.hide();
+          }
+        });
+      });
+      
+      // Close menu when clicking on dropdown items
+      const dropdownItems = document.querySelectorAll('.dropdown-item');
+      dropdownItems.forEach(item => {
+        item.addEventListener('click', function() {
+          if (window.innerWidth <= 991.98) {
+            const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+              toggle: false
+            });
+            bsCollapse.hide();
+          }
+        });
+      });
+    });
+
+    (function(){
+      const closeBtn = document.getElementById("mobile-close-btn");
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function() {
+          const navbarCollapse = document.querySelector('.navbar-collapse');
+          if (!navbarCollapse) return;
+          const bsCollapse = new bootstrap.Collapse(navbarCollapse, { toggle: false });
+      bsCollapse.hide();
+    });
+      } else {
+        console.warn('[home] mobile-close-btn not found; skipping close handler');
+      }
+    })();
+  </script>
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <%- include('partials/footer') %>
+</body>
+</html>
